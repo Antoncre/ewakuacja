@@ -1,0 +1,64 @@
+<TheLayout>
+    surname:surname
+    name:name
+    fathers_name:fathers_name
+    adres:adres
+    number:number
+    pesel:pesel
+    button:button
+
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+        GridLayout:
+            cols:2
+            text_size: 40
+            row_force_default:True
+            row_default_height:40
+            col_force_default:True
+            col_default_width:400
+            text_size: 40
+
+            Label:
+                text: "Nazwisko"
+            TextInput:
+                multiline:False
+                id:surname
+
+            Label:
+                text: "Imię"
+            TextInput:
+                multiline:False
+                id:name
+
+            Label:
+                text: "Imię Ojca"
+            TextInput:
+                multiline:False
+                id:fathers_name
+
+            Label:
+                text: "PESEL"
+            TextInput:
+                multiline:False
+                id:pesel
+
+            Label:
+                text: "Adres zamieszkania"
+            TextInput:
+                multiline:False
+                id:adres
+
+            Label:
+                text: "Telefon kontaktowy"
+            TextInput:
+                multiline:False
+                id:number
+                on_text: root.typer()
+
+        Button:
+            text: "Drukuj"
+            disabled: True
+            id: button
+            on_press: root.opens_printing()
+            height: 70

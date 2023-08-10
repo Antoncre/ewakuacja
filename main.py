@@ -3,22 +3,18 @@ import os
 import subprocess
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 from kivy.core.window import Window
 
+# pip install pyinstaller
+
 Builder.load_file('my.kv')
 
+Window.clearcolor = (0, 0, 0, 1)
+Window.fullscreen = False
+Window.size = (1100, 800)
 
 class TheLayout(Widget):
-    surname = ObjectProperty(None)
-    name = ObjectProperty(None)
-    fathers_name = ObjectProperty(None)
-    pesel = ObjectProperty(None)
-    number = ObjectProperty(None)
-    address = ObjectProperty(None)
-    button = ObjectProperty(None)
-
     def opens_printing(self):
         name = self.name.text
         surname = self.surname.text
@@ -66,9 +62,6 @@ class TheLayout(Widget):
 
 class EwakuacjaApp(App):
     def build(self):
-        Window.clearcolor = (0, 0, 0, 1)
-        Window.fullscreen = False
-        Window.size = (1100, 800)
         return TheLayout()
 
 

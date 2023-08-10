@@ -4,6 +4,10 @@ import subprocess
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
+from kivy.lang import Builder
+from kivy.core.window import Window
+
+Builder.load_file('my.kv')
 
 
 class TheLayout(Widget):
@@ -12,13 +16,14 @@ class TheLayout(Widget):
     fathers_name = ObjectProperty(None)
     pesel = ObjectProperty(None)
     number = ObjectProperty(None)
-    adres = ObjectProperty(None)
-    burron = ObjectProperty(None)
+    address = ObjectProperty(None)
+    button = ObjectProperty(None)
+
     def opens_printing(self):
         name = self.name.text
         surname = self.surname.text
         print(name, surname)
-        file_path = '115.pdf'  # Replace with the actual file path
+        file_path = '115.pdf'
 
         if os.path.exists(file_path):
             try:
@@ -32,7 +37,14 @@ class TheLayout(Widget):
 
     def typer(self):
         self.button.disabled = True
+        self.surname.fine = False
+        self.name.fine = False
+        self.fathers_name.fine = False
+        self.pesel.fine = False
+        self.address.fine = False
         self.number.fine = False
+
+        # print(locals())
         if self.number.text:
             try:
                 number = int(self.number.text)
@@ -47,11 +59,18 @@ class TheLayout(Widget):
         if self.number.fine:
             self.button.disabled = False
 
+    def _on_keyboard_down(self, keycode):
+        if self.surname.focus and keycode == 40:  # 40 - Enter key pressed
+            self.name.focus = True
 
-class MyApp(App):
+
+class EwakuacjaApp(App):
     def build(self):
+        Window.clearcolor = (0, 0, 0, 1)
+        Window.fullscreen = False
+        Window.size = (1100, 800)
         return TheLayout()
 
 
 if __name__ == '__main__':
-    MyApp().run()
+    EwakuacjaApp().run()

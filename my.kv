@@ -1,64 +1,106 @@
+<TextInput>
+    font_size: 25
+    size_hint: (0.5, 1)
+    pos_hint: {'center_x': 0.5}
+    halign: 'center'
+
+<Label>
+    font_size: 25
+    pos_hint: {'center_x': 0.5}
+    size_hint: (0.5, 1)
+    pos_hint: {'center_x': 0.5}
+    canvas.before:
+        Color:
+            rgba: (0.4,0.7,0.3,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
 <TheLayout>
+    # For top layout we can mix for each element to achieve a position: {'x', 'y', 'top', 'bottom', 'left', 'right'}
+    # for example pos_hint: {"x":0, "top":1}
     surname:surname
     name:name
     fathers_name:fathers_name
-    adres:adres
+    address:address
     number:number
     pesel:pesel
     button:button
+    BoxLayout:
 
-    GridLayout:
-        cols:1
+        # Image:
+            # source: 'images/sth.jpg'
+            # allow_stretch: True
+            # keep_ratio: False
+
         size: root.width, root.height
-        GridLayout:
-            cols:2
-            text_size: 40
-            row_force_default:True
-            row_default_height:40
-            col_force_default:True
-            col_default_width:400
-            text_size: 40
+        padding: 15
+        spacing: 10
+        orientation: "vertical"
+        text_size: 40
+        row_force_default:True
+        row_default_height:40
+        col_force_default:True
+        col_default_width:400
+        text_size: 40
 
-            Label:
-                text: "Nazwisko"
-            TextInput:
-                multiline:False
-                id:surname
+        Label:
+            text: "Nazwisko:"
+        TextInput:
+            multiline:False
+            id:surname
 
-            Label:
-                text: "Imię"
-            TextInput:
-                multiline:False
-                id:name
+        Label:
+            text: "Imię:"
 
-            Label:
-                text: "Imię Ojca"
-            TextInput:
-                multiline:False
-                id:fathers_name
+        TextInput:
+            multiline:False
+            id:name
 
-            Label:
-                text: "PESEL"
-            TextInput:
-                multiline:False
-                id:pesel
+        Label:
+            text: "Imię ojca:"
+        TextInput:
+            multiline:False
+            id:fathers_name
 
-            Label:
-                text: "Adres zamieszkania"
-            TextInput:
-                multiline:False
-                id:adres
+        Label:
+            text: "PESEL:"
+        TextInput:
+            multiline:False
+            id:pesel
 
-            Label:
-                text: "Telefon kontaktowy"
-            TextInput:
-                multiline:False
-                id:number
-                on_text: root.typer()
+        Label:
+            text: "Adres zamieszkania:"
+        TextInput:
+            multiline:False
+            id:address
+
+        Label:
+            text: "Telefon kontaktowy:"
+
+        TextInput:
+            multiline:False
+            id:number
+            on_text: root.typer()
+
+        Label:
+            text: ""
+            canvas.before:
+                Color:
+                    rgba: (0,0,0,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
 
         Button:
+            padding: 20
             text: "Drukuj"
+            font_size: 30
+            size_hint: (0.5, 1.4)
             disabled: True
             id: button
             on_press: root.opens_printing()
-            height: 70
+            background_normal: ''
+            background_disabled_normal: ''
+            background_color:(0.207, 0.635, 0.423, 0.9)

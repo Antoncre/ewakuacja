@@ -8,13 +8,17 @@
     font_size: 25
     pos_hint: {'center_x': 0.5}
     size_hint: (0.5, 1)
-    pos_hint: {'center_x': 0.5}
     canvas.before:
         Color:
             rgba: (0.4,0.7,0.3,1)
         Rectangle:
             size: self.size
             pos: self.pos
+
+<Rectangle>
+    size_hint: (0.5, 1)
+    pos_hint: {'center_x': 0.5}
+    halign: 'center'
 
 <TheLayout>
     # For top layout we can mix for each element to achieve a position: {'x', 'y', 'top', 'bottom', 'left', 'right'}
@@ -27,14 +31,24 @@
     number:number
     pesel:pesel
     button:button
-    BoxLayout:
 
+    BoxLayout:
+        size: root.width-0.9*root.width, root.height
+
+        Button:
+            text: "yeah"
+            size_hint: (0.5, 0.2)
+            pos_hint: {"bottom":0, "right":0}
+
+
+    BoxLayout:
+        size: root.width-0.2*root.width, root.height
         # Image:
             # source: 'images/sth.jpg'
             # allow_stretch: True
             # keep_ratio: False
 
-        size: root.width, root.height
+        size: root.width-0.2*root.width, root.height
         padding: 15
         spacing: 10
         orientation: "vertical"
@@ -49,6 +63,14 @@
             text: "Nazwisko:"
         TextInput:
             multiline:False
+            canvas.after:
+                Color:
+                    rgba: 1, 182/255, 20/255, 1
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            foreground_color: (0, 0, 0, 1)
+            on_text: root.typer()
             id:surname
 
         Label:
@@ -56,24 +78,58 @@
 
         TextInput:
             multiline:False
+            canvas.after:
+                Color:
+                    rgba: 1, 182/255, 20/255, 1
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            foreground_color: (0, 0, 0, 1)
+            on_text: root.typer()
             id:name
 
         Label:
             text: "Imię ojca:"
         TextInput:
             multiline:False
+            canvas.after:
+                Color:
+                    rgba: 1, 182/255, 20/255, 1
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            foreground_color: (0, 0, 0, 1)
+            on_text: root.typer()
             id:fathers_name
 
         Label:
             text: "PESEL:"
         TextInput:
             multiline:False
+            input_type: 'number'
+            input_filter: 'int'
+            canvas.after:
+                Color:
+                    rgba: 1, 182/255, 20/255, 1
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            foreground_color: (0, 0, 0, 1)
+            on_text: root.typer()
             id:pesel
 
         Label:
             text: "Adres zamieszkania:"
         TextInput:
-            multiline:False
+            multiline:True
+            canvas.after:
+                Color:
+                    rgba: 1, 182/255, 20/255, 1
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            foreground_color: (0, 0, 0, 1)
+            on_text: root.typer()
             id:address
 
         Label:
@@ -81,8 +137,17 @@
 
         TextInput:
             multiline:False
-            id:number
+            input_type: "number"
+            canvas.after:
+                Color:
+                    rgba: 1, 182/255, 20/255, 1
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            foreground_color: (0, 0, 0, 1)
             on_text: root.typer()
+            id:number
+
 
         Label:
             text: ""
@@ -107,3 +172,13 @@
             background_normal: ''
             background_disabled_normal: ''
             background_color:(0.207, 0.635, 0.423, 0.9)
+
+
+    BoxLayout:
+        size: root.width-0.9*root.width, root.height
+
+        Button:
+            text: "yeah"
+            size_hint: (0.5, 0.1)
+            pos_hint: {"x":0, "left":1}
+

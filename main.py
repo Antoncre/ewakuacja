@@ -7,6 +7,7 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.graphics import Color, Line
+from kivy.core.text.markup import MarkupLabel
 
 # pip install pyinstaller
 

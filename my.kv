@@ -1,5 +1,5 @@
 <TextInput>
-    font_size: 25
+    font_size: 28
     size_hint: (0.5, 1)
     pos_hint: {'center_x': 0.5}
     halign: 'center'
@@ -18,12 +18,23 @@
 <Rectangle>
     size_hint: (0.5, 1)
     pos_hint: {'center_x': 0.5}
-    halign: 'center'
+    canvas.before:
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<Line>
+    size_hint: (0.5, 1)
+    pos_hint: {'center_x': 0.5}
 
 <TheLayout>
     # For top layout we can mix for each element to achieve a position: {'x', 'y', 'top', 'bottom', 'left', 'right'}
     # for example pos_hint: {"x":0, "top":1}
     # remember to use both size_hint and pos_hint
+    # Image:
+        # source: 'images/sth.jpg'
+        # allow_stretch: True
+        # keep_ratio: False
     surname:surname
     name:name
     fathers_name:fathers_name
@@ -31,134 +42,264 @@
     number:number
     pesel:pesel
     button:button
+    name_1:name_1
+    fathers_name_1:fathers_name_1
+    address_1:address_1
+    number_1:number_1
+    pesel_1:pesel_1
+    button_1:button_1
 
+    # obramowanie całości
     BoxLayout:
-        size: root.width-0.9*root.width, root.height
-
-        Button:
-            text: "yeah"
-            size_hint: (0.5, 0.2)
-            pos_hint: {"bottom":0, "right":0}
-
-
-    BoxLayout:
-        size: root.width-0.2*root.width, root.height
-        # Image:
-            # source: 'images/sth.jpg'
-            # allow_stretch: True
-            # keep_ratio: False
-
-        size: root.width-0.2*root.width, root.height
-        padding: 15
-        spacing: 10
         orientation: "vertical"
-        text_size: 40
-        row_force_default:True
-        row_default_height:40
-        col_force_default:True
-        col_default_width:400
-        text_size: 40
+        size_hint: (1, 1)
+        pos_hint: {'center_x': 0.5}
 
-        Label:
-            text: "Nazwisko:"
-        TextInput:
-            multiline:False
-            canvas.after:
-                Color:
-                    rgba: 1, 182/255, 20/255, 1
-                Line:
-                    width: 2
-                    rectangle: self.x, self.y, self.width, self.height
-            foreground_color: (0, 0, 0, 1)
-            on_text: root.typer()
-            id:surname
+        # górna część
+        BoxLayout:
+            orientation: "horizontal"
 
-        Label:
-            text: "Imię:"
+            BoxLayout:
+                # dla panelu pierwszego z exportami i bazą
+                orientation: "vertical"
+                size: root.width-0.9*root.width, root.height
 
-        TextInput:
-            multiline:False
-            canvas.after:
-                Color:
-                    rgba: 1, 182/255, 20/255, 1
-                Line:
-                    width: 2
-                    rectangle: self.x, self.y, self.width, self.height
-            foreground_color: (0, 0, 0, 1)
-            on_text: root.typer()
-            id:name
+                Button:
+                    text: "yeah"
+                    size_hint: (0.5, 0.2)
+                    pos_hint: {"bottom":0, "right":0}
 
-        Label:
-            text: "Imię ojca:"
-        TextInput:
-            multiline:False
-            canvas.after:
-                Color:
-                    rgba: 1, 182/255, 20/255, 1
-                Line:
-                    width: 2
-                    rectangle: self.x, self.y, self.width, self.height
-            foreground_color: (0, 0, 0, 1)
-            on_text: root.typer()
-            id:fathers_name
+            # dla pierwszego formularza
+            BoxLayout:
+                size: root.width-0.4*root.width, root.height
+                padding: 15
+                spacing: 10
+                orientation: "vertical"
+                text_size: 40
+                row_force_default:True
+                row_default_height:40
+                col_force_default:True
+                col_default_width:400
+                text_size: 40
 
-        Label:
-            text: "PESEL:"
-        TextInput:
-            multiline:False
-            input_type: 'number'
-            input_filter: 'int'
-            canvas.after:
-                Color:
-                    rgba: 1, 182/255, 20/255, 1
-                Line:
-                    width: 2
-                    rectangle: self.x, self.y, self.width, self.height
-            foreground_color: (0, 0, 0, 1)
-            on_text: root.typer()
-            id:pesel
+                Label:
+                    text: "Nazwisko:"
+                TextInput:
+                    multiline:False
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:surname
 
-        Label:
-            text: "Adres zamieszkania:"
-        TextInput:
-            multiline:True
-            canvas.after:
-                Color:
-                    rgba: 1, 182/255, 20/255, 1
-                Line:
-                    width: 2
-                    rectangle: self.x, self.y, self.width, self.height
-            foreground_color: (0, 0, 0, 1)
-            on_text: root.typer()
-            id:address
+                Label:
+                    text: "Imię:"
 
-        Label:
-            text: "Telefon kontaktowy:"
+                TextInput:
+                    multiline:False
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:name
 
-        TextInput:
-            multiline:False
-            input_type: "number"
-            canvas.after:
-                Color:
-                    rgba: 1, 182/255, 20/255, 1
-                Line:
-                    width: 2
-                    rectangle: self.x, self.y, self.width, self.height
-            foreground_color: (0, 0, 0, 1)
-            on_text: root.typer()
-            id:number
+                Label:
+                    text: "Imię ojca:"
+                TextInput:
+                    multiline:False
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:fathers_name
+
+                Label:
+                    text: "PESEL:"
+                TextInput:
+                    multiline:False
+                    input_type: 'number'
+                    input_filter: 'int'
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:pesel
+
+                Label:
+                    text: "Adres zamieszkania:"
+                TextInput:
+                    multiline:True
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:address
+
+                Label:
+                    text: "Telefon kontaktowy:"
+
+                TextInput:
+                    multiline:False
+                    input_type: "number"
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:number
 
 
-        Label:
-            text: ""
-            id:nothing
-            multiline:True
-            canvas.before:
-                Color:
-                    rgba: (0,0,0,1)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
+                Label:
+                    text: ""
+                    id:nothing
+                    multiline:True
+                    canvas.before:
+                        Color:
+                            rgba: (0,0,0,1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+            # dla drugiego formularza
+            BoxLayout:
+                size: root.width-0.4*root.width, root.height
+                pos_hint: {'center_x': 0.8}
+                padding: 15
+                spacing: 10
+                orientation: "vertical"
+                text_size: 40
+                row_force_default:True
+                row_default_height:40
+                col_force_default:True
+                col_default_width:400
+                text_size: 40
+
+                Label:
+                    text: "Nazwisko:"
+                TextInput:
+                    multiline:False
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:surname_1
+
+                Label:
+                    text: "Imię:"
+
+                TextInput:
+                    multiline:False
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:name_1
+
+                Label:
+                    text: "Imię ojca:"
+                TextInput:
+                    multiline:False
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:fathers_name_1
+
+                Label:
+                    text: "PESEL:"
+                TextInput:
+                    multiline:False
+                    input_type: 'number'
+                    input_filter: 'int'
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:pesel_1
+
+                Label:
+                    text: "Adres zamieszkania:"
+                TextInput:
+                    multiline:True
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:address_1
+
+                Label:
+                    text: "Telefon kontaktowy:"
+
+                TextInput:
+                    multiline:False
+                    input_type: "number"
+                    canvas.after:
+                        Color:
+                            rgba: 1, 182/255, 20/255, 1
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    foreground_color: (0, 0, 0, 1)
+                    on_text: root.typer()
+                    id:number_1
+
+
+                Label:
+                    text: ""
+                    id:nothing_1
+                    multiline:True
+                    canvas.before:
+                        Color:
+                            rgba: (0,0,0,1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+            BoxLayout:
+                size: root.width-0.9*root.width, root.height
 
 
         Button:
@@ -173,12 +314,4 @@
             background_disabled_normal: ''
             background_color:(0.207, 0.635, 0.423, 0.9)
 
-
-    BoxLayout:
-        size: root.width-0.9*root.width, root.height
-
-        Button:
-            text: "yeah"
-            size_hint: (0.5, 0.1)
-            pos_hint: {"x":0, "left":1}
 

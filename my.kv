@@ -1,13 +1,25 @@
 <TextInput>
     font_size: 28
-    size_hint: (0.5, 1)
+    size_hint: (0.8, 1)
     pos_hint: {'center_x': 0.5}
     halign: 'center'
+
+<Button>
+    font_size: 28
+    font_name: "DejaVuSans.ttf"
+    size_hint: (0.8, 1)
+    padding: 20
+    canvas.before:
+        Color:
+            rgba: (0.4,0.7,0.3,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
 
 <Label>
     font_size: 25
     pos_hint: {'center_x': 0.5}
-    size_hint: (0.5, 1)
+    size_hint: (0.8, 1)
     canvas.before:
         Color:
             rgba: (0.4,0.7,0.3,1)
@@ -16,7 +28,7 @@
             pos: self.pos
 
 <Rectangle>
-    size_hint: (0.5, 1)
+    size_hint: (0.8, 1)
     pos_hint: {'center_x': 0.5}
     canvas.before:
         Rectangle:
@@ -47,27 +59,37 @@
     address_1:address_1
     number_1:number_1
     pesel_1:pesel_1
-    button_1:button_1
 
     # obramowanie całości
     BoxLayout:
         orientation: "vertical"
-        size_hint: (1, 1)
-        pos_hint: {'center_x': 0.5}
+        size: root.width, root.height
 
         # górna część
         BoxLayout:
             orientation: "horizontal"
 
+            # dla panelu pierwszego z exportami i bazą
             BoxLayout:
-                # dla panelu pierwszego z exportami i bazą
                 orientation: "vertical"
-                size: root.width-0.9*root.width, root.height
+                padding: 15
+                spacing: 10
 
-                Button:
-                    text: "yeah"
-                    size_hint: (0.5, 0.2)
-                    pos_hint: {"bottom":0, "right":0}
+                AnchorLayout:
+                    Button:
+                        text: "Export Excel"
+
+                AnchorLayout:
+                    Button:
+                        text: "Export CSV"
+
+                AnchorLayout:
+                    Button:
+                        text: "Export DB"
+
+                AnchorLayout:
+                    Button:
+                        text: "Osoby"
 
             # dla pierwszego formularza
             BoxLayout:
@@ -144,6 +166,7 @@
                 Label:
                     text: "Adres zamieszkania:"
                 TextInput:
+                    size_hint: (0.8, 2)
                     multiline:True
                     canvas.after:
                         Color:
@@ -185,7 +208,7 @@
 
             # dla drugiego formularza
             BoxLayout:
-                size: root.width-0.4*root.width, root.height
+                size: root.width-0.2*root.width, root.height
                 pos_hint: {'center_x': 0.8}
                 padding: 15
                 spacing: 10
@@ -199,6 +222,12 @@
 
                 Label:
                     text: "Nazwisko:"
+                    canvas.before:
+                        Color:
+                            rgba: (62/255, 124/255, 185/255, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
                 TextInput:
                     multiline:False
                     canvas.after:
@@ -213,6 +242,12 @@
 
                 Label:
                     text: "Imię:"
+                    canvas.before:
+                        Color:
+                            rgba: (62/255, 124/255, 185/255, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
 
                 TextInput:
                     multiline:False
@@ -228,6 +263,12 @@
 
                 Label:
                     text: "Imię ojca:"
+                    canvas.before:
+                        Color:
+                            rgba: (62/255, 124/255, 185/255, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
                 TextInput:
                     multiline:False
                     canvas.after:
@@ -242,6 +283,12 @@
 
                 Label:
                     text: "PESEL:"
+                    canvas.before:
+                        Color:
+                            rgba: (62/255, 124/255, 185/255, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
                 TextInput:
                     multiline:False
                     input_type: 'number'
@@ -258,7 +305,14 @@
 
                 Label:
                     text: "Adres zamieszkania:"
+                    canvas.before:
+                        Color:
+                            rgba: (62/255, 124/255, 185/255, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
                 TextInput:
+                    size_hint: (0.8, 2)
                     multiline:True
                     canvas.after:
                         Color:
@@ -272,7 +326,12 @@
 
                 Label:
                     text: "Telefon kontaktowy:"
-
+                    canvas.before:
+                        Color:
+                            rgba: (62/255, 124/255, 185/255, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
                 TextInput:
                     multiline:False
                     input_type: "number"
@@ -300,13 +359,24 @@
 
             BoxLayout:
                 size: root.width-0.9*root.width, root.height
+                Button:
+                    text: "Zapisz i dodaj kolejne osoby →"
+                    size_hint: (0.2, 0.2)
+                    pos_hint: {"x":0.5, "y":0.4}
+                    font_name: "DejaVuSans.ttf"
+                    canvas.before:
+                        Color:
+                            rgba: (62/255, 124/255, 185/255, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
 
 
         Button:
             padding: 20
             text: "Drukuj"
             font_size: 30
-            size_hint: (0.5, 1.4)
+            size_hint: (0.2, 0.13)
             disabled: True
             id: button
             on_press: root.opens_printing()

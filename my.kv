@@ -2,7 +2,6 @@ WindowManager:
     MainWindow:
     TableWindow:
 
-
 <TextInput>
     font_size: 28
     size_hint: (0.8, 1)
@@ -61,6 +60,7 @@ WindowManager:
     db_btn:db_btn
     people_btn:people_btn
 
+    lp_1:lp_1
     surname:surname
     firstname:firstname
     fathers_name:fathers_name
@@ -68,6 +68,8 @@ WindowManager:
     number:number
     pesel:pesel
 
+    lp_2:lp_2
+    surname_1:surname_1
     name_1:name_1
     fathers_name_1:fathers_name_1
     address_1:address_1
@@ -75,19 +77,26 @@ WindowManager:
     pesel_1:pesel_1
 
     print_btn:print_btn
+    save_btn:save_btn
 
 
     # obramowanie wszystkich ramek
-    BoxLayout:
+    MDBoxLayout:
         orientation: "vertical"
         size: root.width, root.height
+        canvas:
+            Color:
+                rgba: 0, 0, 0, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
 
         # górna część
-        BoxLayout:
+        MDBoxLayout:
             orientation: "horizontal"
 
             # dla panelu pierwszego z exportami i bazą
-            BoxLayout:
+            MDBoxLayout:
                 orientation: "vertical"
                 padding: 15
                 spacing: 10
@@ -112,7 +121,7 @@ WindowManager:
                             app.root.current = "table_window"
                             root.manager.transition.direction = 'left'
             # dla pierwszego formularza
-            BoxLayout:
+            MDBoxLayout:
                 size: root.width-0.4*root.width, root.height
                 padding: 15
                 spacing: 10
@@ -125,9 +134,20 @@ WindowManager:
                 text_size: 40
 
                 Label:
+                    text: ""
+                    id:lp_1
+                    canvas.before:
+                        Color:
+                            rgba: (0, 0, 0, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                Label:
                     text: "Nazwisko:"
                 TextInput:
                     multiline:False
+                    write_tab: False
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -143,6 +163,7 @@ WindowManager:
 
                 TextInput:
                     multiline:False
+                    write_tab: False
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -157,6 +178,7 @@ WindowManager:
                     text: "Imię ojca:"
                 TextInput:
                     multiline:False
+                    write_tab: False
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -171,6 +193,7 @@ WindowManager:
                     text: "PESEL:"
                 TextInput:
                     multiline:False
+                    write_tab: False
                     input_type: 'number'
                     input_filter: 'int'
                     canvas.after:
@@ -188,6 +211,7 @@ WindowManager:
                 TextInput:
                     size_hint: (0.8, 2)
                     multiline:True
+                    write_tab: False
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -203,6 +227,7 @@ WindowManager:
 
                 TextInput:
                     multiline:False
+                    write_tab: False
                     input_type: "number"
                     canvas.after:
                         Color:
@@ -218,7 +243,6 @@ WindowManager:
                 Label:
                     text: ""
                     id:nothing
-                    multiline:True
                     canvas.before:
                         Color:
                             rgba: (0,0,0,1)
@@ -227,7 +251,7 @@ WindowManager:
                             pos: self.pos
 
             # dla drugiego formularza
-            BoxLayout:
+            MDBoxLayout:
                 size: root.width-0.2*root.width, root.height
                 pos_hint: {'center_x': 0.8}
                 padding: 15
@@ -241,6 +265,17 @@ WindowManager:
                 text_size: 40
 
                 Label:
+                    text: ""
+                    canvas.before:
+                        Color:
+                            rgba: (0, 0, 0, 1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                    color: 1, 1, 1, 1
+                    id:lp_2
+
+                Label:
                     text: "Nazwisko:"
                     canvas.before:
                         Color:
@@ -250,6 +285,7 @@ WindowManager:
                             pos: self.pos
                 TextInput:
                     multiline:False
+                    write_tab: False
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -271,6 +307,7 @@ WindowManager:
 
                 TextInput:
                     multiline:False
+                    write_tab: False
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -291,6 +328,7 @@ WindowManager:
                             pos: self.pos
                 TextInput:
                     multiline:False
+                    write_tab: False
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -311,6 +349,7 @@ WindowManager:
                             pos: self.pos
                 TextInput:
                     multiline:False
+                    write_tab: False
                     input_type: 'number'
                     input_filter: 'int'
                     canvas.after:
@@ -334,6 +373,7 @@ WindowManager:
                 TextInput:
                     size_hint: (0.8, 2)
                     multiline:True
+                    write_tab: False
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -354,6 +394,7 @@ WindowManager:
                             pos: self.pos
                 TextInput:
                     multiline:False
+                    write_tab: False
                     input_type: "number"
                     canvas.after:
                         Color:
@@ -377,9 +418,10 @@ WindowManager:
                             size: self.size
                             pos: self.pos
 
-            BoxLayout:
+            MDBoxLayout:
                 size: root.width-0.9*root.width, root.height
                 Button:
+                    disabled: True
                     text: "Zapisz i dodaj kolejne osoby"
                     size_hint: (0.2, 0.2)
                     pos_hint: {"x":0.5, "y":0.4}
@@ -390,24 +432,32 @@ WindowManager:
                         Rectangle:
                             size: self.size
                             pos: self.pos
+                    on_press: root.save_and_clear()
+                    id:save_btn
 
 
         Button:
-            padding: 20
+            disabled: True
             text: "Drukuj"
             font_size: 30
+            padding: 20
             size_hint: (0.2, 0.13)
-            disabled: True
-            id: print_btn
             on_press: root.opens_printing()
             background_normal: ''
             background_disabled_normal: ''
             background_color:(0.207, 0.635, 0.423, 0.9)
+            id: print_btn
 
 
 <TableWindow>
     name: "table_window"
-    BoxLayout:
+    canvas:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    MDBoxLayout:
         Button:
             padding: 20
             text: "powrót"

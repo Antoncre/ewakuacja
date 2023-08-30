@@ -1,3 +1,8 @@
+WindowManager:
+    MainWindow:
+    TableWindow:
+
+
 <TextInput>
     font_size: 28
     size_hint: (0.8, 1)
@@ -40,7 +45,9 @@
     size_hint: (0.5, 1)
     pos_hint: {'center_x': 0.5}
 
-<TheLayout>
+
+<MainWindow>
+    name: "main_window"
     # For top layout we can mix for each element to achieve a position: {'x', 'y', 'top', 'bottom', 'left', 'right'}
     # for example pos_hint: {"x":0, "top":1}
     # remember to use both size_hint and pos_hint
@@ -48,18 +55,27 @@
         # source: 'images/sth.jpg'
         # allow_stretch: True
         # keep_ratio: False
+
+    excel_btn:excel_btn
+    csv_btn:csv_btn
+    db_btn:db_btn
+    people_btn:people_btn
+
     surname:surname
-    name:name
+    firstname:firstname
     fathers_name:fathers_name
     address:address
     number:number
     pesel:pesel
-    button:button
+
     name_1:name_1
     fathers_name_1:fathers_name_1
     address_1:address_1
     number_1:number_1
     pesel_1:pesel_1
+
+    print_btn:print_btn
+
 
     # obramowanie wszystkich ramek
     BoxLayout:
@@ -79,19 +95,22 @@
                 AnchorLayout:
                     Button:
                         text: "Export Excel"
-
+                        id:excel_btn
                 AnchorLayout:
                     Button:
                         text: "Export CSV"
-
+                        id:csv_btn
                 AnchorLayout:
                     Button:
                         text: "Export DB"
-
+                        id:db_btn
                 AnchorLayout:
                     Button:
                         text: "Osoby"
-
+                        id:people_btn
+                        on_press:
+                            app.root.current = "table_window"
+                            root.manager.transition.direction = 'left'
             # dla pierwszego formularza
             BoxLayout:
                 size: root.width-0.4*root.width, root.height
@@ -132,7 +151,7 @@
                             rectangle: self.x, self.y, self.width, self.height
                     foreground_color: (0, 0, 0, 1)
                     on_text: root.typer()
-                    id:name
+                    id:firstname
 
                 Label:
                     text: "Imię ojca:"
@@ -361,7 +380,7 @@
             BoxLayout:
                 size: root.width-0.9*root.width, root.height
                 Button:
-                    text: "Zapisz i dodaj kolejne osoby →"
+                    text: "Zapisz i dodaj kolejne osoby"
                     size_hint: (0.2, 0.2)
                     pos_hint: {"x":0.5, "y":0.4}
                     font_name: "DejaVuSans.ttf"
@@ -379,10 +398,30 @@
             font_size: 30
             size_hint: (0.2, 0.13)
             disabled: True
-            id: button
+            id: print_btn
             on_press: root.opens_printing()
             background_normal: ''
             background_disabled_normal: ''
             background_color:(0.207, 0.635, 0.423, 0.9)
 
 
+<TableWindow>
+    name: "table_window"
+    BoxLayout:
+        Button:
+            padding: 20
+            text: "powrót"
+            font_size: 30
+            size_hint: (0.2, 0.13)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            id: print_btn
+            on_press:
+                app.root.current = "main_window"
+                root.manager.transition.direction = 'right'
+            background_normal: ''
+            background_disabled_normal: ''
+            background_color:(0.207, 0.635, 0.423, 0.9)
+
+        Label:
+            text: "Here we are"
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}

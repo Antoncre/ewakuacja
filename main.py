@@ -3,15 +3,12 @@ import os
 import subprocess
 import sqlite3
 from kivy.app import App
-from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, NoTransition
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.graphics import Color, Line
-from kivy.core.text.markup import MarkupLabel
 
 # pip install pyinstaller
-
-Builder.load_file('my.kv')
 
 Window.clearcolor = (0, 0, 0, 1)
 Window.maximize()
@@ -76,7 +73,10 @@ def pesel_checker(pesel):
         return False
 
 
-class TheLayout(Widget):
+class WindowManager(ScreenManager):
+    current_transition = NoTransition()
+
+class MainWindow(Screen):
     conn = sqlite3.connect('my.db')
     c = conn.cursor()
     c.execute("""CREATE TABLE if not Exists osoby
@@ -92,7 +92,7 @@ class TheLayout(Widget):
     conn.close()
 
     def opens_printing(self):
-        name = self.name.text
+        name = self.firstname.text
         surname = self.surname.text
         print(name, surname)
         file_path = '115.pdf'
@@ -107,13 +107,19 @@ class TheLayout(Widget):
             print("File not found.")
 
     def typer(self):
-        self.button.disabled = True
+        self.print_btm.disabled = True
         self.surname.fine = False
-        self.name.fine = False
+        self.firstname.fine = False
         self.fathers_name.fine = False
         self.pesel.fine = False
         self.address.fine = False
         self.number.fine = False
+        self.surname_1.fine = False
+        self.name_1.fine = False
+        self.fathers_name_1.fine = False
+        self.pesel_1.fine = False
+        self.address_1.fine = False
+        self.number_1.fine = False
 
         # print(locals())
         with self.surname.canvas.after:
@@ -127,16 +133,16 @@ class TheLayout(Widget):
                                 self.surname.width, self.surname.height),
                      width=2)
 
-        with self.name.canvas.after:
-            self.name.canvas.after.clear()
-            if self.name.text:
-                self.name.fine = True
+        with self.firstname.canvas.after:
+            self.firstname.canvas.after.clear()
+            if self.firstname.text:
+                self.firstname.fine = True
             else:
-                self.name.fine = False
-                self.name.fine = False
+                self.firstname.fine = False
+                self.firstname.fine = False
                 Color(1, 182/255, 20/255, 1)
-                Line(rectangle=(self.name.x, self.name.y,
-                                self.name.width, self.name.height),
+                Line(rectangle=(self.firstname.x, self.firstname.y,
+                                self.firstname.width, self.firstwname.height),
                      width=2)
                 
         with self.fathers_name.canvas.after:
@@ -217,38 +223,46 @@ class TheLayout(Widget):
 
         if self.surname.fine and self.name.fine and self.fathers_name.fine and \
                 self.pesel.fine and self.address.fine and self.number.fine:
-            self.button.disabled = False
-            conn = sqlite3.connect('my.db')
-            c = conn.cursor()
-            INSERT_QUERY = f"INSERT INTO osoby VALUES ('{self.surname.text}','{self.name.text}'," \
-                           f"'{self.fathers_name.text}', '{self.pesel.text}', '{self.address.text}', " \
-                           f"'{self.number.text}')"
-            c.execute(INSERT_QUERY)
-            conn.commit()
-            conn.close()
+            self.print_btn.disabled = False
 
     def _on_keyboard_down(self, keycode):
         if self.surname.focus and keycode == 40:  # 40 - Enter key pressed
-            self.name.focus = True
+            self.firstname.focus = True
+
+    def save_and_clear(self):
+        conn = sqlite3.connect('my.db')
+        c = conn.cursor()
+        insert_query = f"INSERT INTO osoby VALUES ('{self.surname.text}','{self.name.text}'," \
+                       f"'{self.fathers_name.text}', '{self.pesel.text}', '{self.address.text}', " \
+                       f"'{self.number.text}')"
+        c.execute(insert_query)
+        conn.commit()
+        conn.close()
 
     def show_people(self):
         conn = sqlite3.connect('my.db')
         c = conn.cursor()
-        SELECT_QUERY = f"SELECT * FROM osoby"
-        c.execute(SELECT_QUERY)
+        select_query = f"SELECT * FROM osoby"
+        c.execute(select_query)
         records = c.fetchall()
         word = ''
         for record in records:
             word = f'{word}/n{record}'
             self.nothing.text = word
-            print(word)
         conn.commit()
         conn.close()
 
 
+class TableWindow(Screen):
+    pass
+
+
+kv = Builder.load_file('my.kv')
+
+
 class EwakuacjaApp(App):
     def build(self):
-        return TheLayout()
+        return kv
 
 
 if __name__ == '__main__':

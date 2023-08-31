@@ -9,7 +9,10 @@ from kivy.graphics import Color, Line
 from kivymd.app import MDApp
 from kivymd.uix.screen import Screen
 from kivymd.uix.datatables import MDDataTable
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDRoundFlatButton
 from kivy.metrics import dp
+from fpdf import FPDF
 
 
 # pip install pyinstaller
@@ -83,6 +86,7 @@ class MainWindow(Screen):
     c = conn.cursor()
     c.execute("""CREATE TABLE if not Exists osoby
             (
+                lp integer,
                 surname text, 
                 name text,
                 father text,
@@ -93,11 +97,44 @@ class MainWindow(Screen):
     conn.commit()
     conn.close()
 
+    def excel_export(self):
+        pass
+        # choose the location where to save the exported file
+
+    def csv_export(self):
+        pass
+
+    def db_export(self):
+        pass
+
     def opens_printing(self):
-        name = self.firstname.text
+        firstname = self.firstname.text
         surname = self.surname.text
-        print(name, surname)
-        file_path = '115.pdf'
+        fathers_name = self.fathers_name.text
+        pesel = self.pesel.text
+        address = self.address.text
+        number = self.number.text
+
+        name_1 = self.firstname.text
+        surname_1 = self.surname.text
+        fathers_name_1 = self.fathers_name.text
+        pesel_1 = self.pesel.text
+        address_1 = self.address.text
+        number_1 = self.number.text
+
+        nr = '1'
+        pdf = FPDF('P', 'mm', 'A4')
+        pdf.add_page()
+        pdf.add_font('Sans_pro', '', 'Sans_pro.otf', uni=True)
+        pdf.set_font('Sans_pro', 'B', 16)
+        pdf.cell(70, 10, f"Karta Ewakuacji Nr {nr.zfill(5)}", ln=True)
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(70, 10, f"Nazwisko: {surname.title()}", ln=True)
+        pdf.cell(70, 10, f"Imię, imię ojca: {firstname.title()}, {fathers_name.title()}", ln=True)
+        pdf.cell(20, 10, f"PESEL:")
+        [pdf.cell(5, 9, f"{pesel[n]}", border=True) for n in range(11)]
+        pdf.output('the_pdf.pdf')
+        file_path = 'the_pdf.pdf'
         if os.path.exists(file_path):
             try:
                 subprocess.run(f'start /wait /min {os.path.abspath(file_path)}', shell=True)
@@ -121,6 +158,31 @@ class MainWindow(Screen):
         self.pesel_1.fine = False
         self.address_1.fine = False
         self.number_1.fine = False
+
+        # do usubięcia
+        self.surname.text = "janek"
+        self.firstname.text = "franek"
+        self.fathers_name.text = "franek"
+        self.pesel.text = "11111111116"
+        self.address.text = "franek"
+        self.number.text = "111222333"
+        self.surname_1.text = "franek"
+        self.name_1.text = "franek"
+        self.fathers_name_1.text = "franek"
+        self.pesel_1.text = "11122211113"
+        self.address_1.text = "11122211113"
+        self.number_1.text = "333222111"
+        # do usubięcia
+
+        self.surname.text.title()
+        # self.firstname.text = self.firstname.text.title()
+        # self.fathers_name.text = self.fathers_name.text.title()
+        # self.address.text = self.address.text.title()
+        # self.surname_1.text = self.surname_1.text.title()
+        # self.name_1.text = self.name_1.text.title()
+        # self.fathers_name_1.text = self.fathers_name_1.text.title()
+        # self.address_1.text = self.address_1.text.title()
+
 
         # print(locals())
         with self.surname.canvas.after:
@@ -338,11 +400,11 @@ class MainWindow(Screen):
     def save_and_clear(self):
         conn = sqlite3.connect('my.db')
         c = conn.cursor()
-        insert_query = f"INSERT INTO osoby VALUES ('{self.surname.text}','{self.firstname.text}'," \
-                       f"'{self.fathers_name.text}', '{self.pesel.text}', '{self.address.text}', " \
+        insert_query = f"INSERT INTO osoby VALUES ('{self.surname.text.title()}','{self.firstname.text.title()}'," \
+                       f"'{self.fathers_name.text.title()}', '{self.pesel.text}', '{self.address.text.title()}', " \
                        f"'{self.number.text}')"
-        insert_query_2 = f"INSERT INTO osoby VALUES ('{self.surname_1.text}','{self.name_1.text}'," \
-                         f"'{self.fathers_name_1.text}', '{self.pesel_1.text}', '{self.address_1.text}', " \
+        insert_query_2 = f"INSERT INTO osoby VALUES ('{self.surname_1.text.title()}','{self.name_1.text.title()}'," \
+                         f"'{self.fathers_name_1.text.title()}', '{self.pesel_1.text}', '{self.address_1.text.title()}', " \
                          f"'{self.number_1.text}')"
         c.execute(insert_query)
         c.execute(insert_query_2)
@@ -388,6 +450,7 @@ class TableWindow(Screen):
     #     )
     #     self.mainbox.add_widget(table)
     #     print('widget added')
+
     def show_table(self):
         conn = sqlite3.connect('my.db')
         c = conn.cursor()
@@ -403,19 +466,19 @@ class TableWindow(Screen):
             size_hint=(1, 1),
             background_color_selected_cell="e4514f",
             column_data=[
-                ("Nr Karty", dp(40)),
+                ("Nr Karty", dp(25)),
                 ("Nazwisko", dp(40)),
                 ("Imię", dp(40)),
                 ("Imię ojca", dp(40)),
-                ("PESEL", dp(40)),
-                ("Adres zamieszkania", dp(40)),
+                ("PESEL", dp(44)),
+                ("Adres zamieszkania", dp(70)),
                 ("Nr telefonu", dp(40)),
             ],
             row_data=[
                 ("1", "Hue", "Jaune", "Josh", "00000000000", "555555555", "hmm")
             ]
         )
-        self.add_widget(table)
+        self.mainbox.add_widget(table)
 
 
 class EwakuacjaApp(MDApp):

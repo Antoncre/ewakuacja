@@ -127,12 +127,32 @@ class MainWindow(Screen):
         pdf.add_page()
         pdf.add_font('Sans_pro', '', 'Sans_pro.otf', uni=True)
         pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(70, 10, f"Karta Ewakuacji Nr {nr.zfill(5)}", ln=True)
+        pdf.cell(70, 10, f"Karta Ewakuacji Nr {nr.zfill(5)}")
+        pdf.cell(10, 10, f"|")
+        pdf.cell(70, 10, f"Karta Ewakuacji Nr {nr.zfill(5)}   B", ln=True)
         pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(70, 10, f"Nazwisko: {surname.title()}")
+        pdf.cell(10, 10, f"|")
         pdf.cell(70, 10, f"Nazwisko: {surname.title()}", ln=True)
+        pdf.cell(70, 10, f"Imię, imię ojca: {firstname.title()}, {fathers_name.title()}")
+        pdf.cell(10, 10, f"|")
         pdf.cell(70, 10, f"Imię, imię ojca: {firstname.title()}, {fathers_name.title()}", ln=True)
         pdf.cell(20, 10, f"PESEL:")
         [pdf.cell(5, 9, f"{pesel[n]}", border=True) for n in range(11)]
+        pdf.cell(10, 10, f"|")
+        pdf.cell(20, 10, f"PESEL:")
+        [pdf.cell(5, 9, f"{pesel[n]}", border=True) for n in range(11)]
+        pdf.cell(0, 10, "|", ln=True)
+        pdf.cell(70, 10, f"Adres stałego zamieszkania:",)
+        pdf.cell(10, 10, f"|")
+        pdf.cell(70, 10, f"Adres stałego zamieszkania:", ln=True)
+        pdf.cell(70, 10, f"{address}")
+        pdf.cell(10, 10, f"|")
+        pdf.cell(70, 10, f"{address}", ln=True)
+
+        pdf.cell(70, 10, f"Telefon Kontaktowy: {number}")
+        pdf.cell(10, 10, f"|")
+        pdf.cell(70, 10, f"Telefon Kontaktowy: {number}", ln=True)
         pdf.output('the_pdf.pdf')
         file_path = 'the_pdf.pdf'
         if os.path.exists(file_path):

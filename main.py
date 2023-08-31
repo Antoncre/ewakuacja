@@ -1,4 +1,4 @@
-
+import platform
 import os
 import subprocess
 import sqlite3
@@ -9,8 +9,8 @@ from kivy.graphics import Color, Line
 from kivymd.app import MDApp
 from kivymd.uix.screen import Screen
 from kivymd.uix.datatables import MDDataTable
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDRoundFlatButton
+# from kivymd.uix.boxlayout import MDBoxLayout
+# from kivymd.uix.button import MDRoundFlatButton
 from kivy.metrics import dp
 from fpdf import FPDF
 
@@ -126,7 +126,7 @@ class MainWindow(Screen):
         pdf = FPDF('P', 'mm', 'A4')
         pdf.add_page()
         pdf.add_font('Sans_pro', '', 'Sans_pro.otf', uni=True)
-        pdf.set_font('Sans_pro', 'B', 16)
+        pdf.set_font('Sans_pro', '', 16)
         pdf.cell(70, 10, f"Karta Ewakuacji Nr {nr.zfill(5)}", ln=True)
         pdf.set_font('Sans_pro', '', 14)
         pdf.cell(70, 10, f"Nazwisko: {surname.title()}", ln=True)
@@ -137,11 +137,17 @@ class MainWindow(Screen):
         file_path = 'the_pdf.pdf'
         if os.path.exists(file_path):
             try:
-                subprocess.run(f'start /wait /min {os.path.abspath(file_path)}', shell=True)
-                # alternate ver without absolute path: subprocess.run(['start /wait /min, '', file_path], shell=True)
-                print("File sent to printer.")
-            except Exception as e:
-                print("Error printing file:", e)
+                if platform.system() == 'Linux':  # Linux
+                    print(os.path.abspath(file_path))
+                    subprocess.call(('xdg-open', f"{os.path.abspath(file_path)}"))
+                elif platform.system() == 'Windows':  # Windows
+                    subprocess.run(f'start {os.path.abspath(file_path)}', shell=True)
+                    # alternate ver without absolute path: subprocess.run(['start /wait /min, '', file_path],
+                    # shell=True)
+                elif platform.system() == 'Darwin':
+                    subprocess.call(('open', file_path))
+            except FileNotFoundError:
+                print('File not found 404')
         else:
             print("File not found.")
 

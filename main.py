@@ -368,18 +368,68 @@ class MainWindow(Screen):
 
 
 class TableWindow(Screen):
-    pass
+    # def __init__(self, **kwargs):
+    #     super(TableWindow, self).__init__(**kwargs)
+    #     table = MDDataTable(
+    #         pos_hint={'center_x': 1, 'center_y': 0.5},
+    #         size_hint=(1, 1),
+    #         background_color_selected_cell="e4514f",
+    #         column_data=[
+    #             ("Nr Karty", dp(140)),
+    #             ("Nazwisko", dp(140)),
+    #             ("Imię", dp(140)),
+    #             ("Imię ojca", dp(140)),
+    #             ("PESEL", dp(140)),
+    #             ("Nr telefonu", dp(140)),
+    #         ],
+    #         row_data=[
+    #             ("1", "Hue", "Jaune", "Josh", "00000000000", "555555555")
+    #         ]
+    #     )
+    #     self.mainbox.add_widget(table)
+    #     print('widget added')
+    def show_table(self):
+        conn = sqlite3.connect('my.db')
+        c = conn.cursor()
+        select_query = f"SELECT * FROM osoby"
+        c.execute(select_query)
+        records = c.fetchall()
+        for record in records:
+            print(record)
+        conn.commit()
+        conn.close()
+        table = MDDataTable(
+            pos_hint={'center_x': 0.5, 'center_y': 0.5},
+            size_hint=(1, 1),
+            background_color_selected_cell="e4514f",
+            column_data=[
+                ("Nr Karty", dp(40)),
+                ("Nazwisko", dp(40)),
+                ("Imię", dp(40)),
+                ("Imię ojca", dp(40)),
+                ("PESEL", dp(40)),
+                ("Adres zamieszkania", dp(40)),
+                ("Nr telefonu", dp(40)),
+            ],
+            row_data=[
+                ("1", "Hue", "Jaune", "Josh", "00000000000", "555555555", "hmm")
+            ]
+        )
+        self.add_widget(table)
 
-
-kv = Builder.load_file('my.kv')
 
 class EwakuacjaApp(MDApp):
-
     def build(self):
         Window.clearcolor = (0, 0, 0, 1)
         Window.maximize()
         self.theme_cls.theme_style = 'Dark'
+        table_window = TableWindow()
+        kv = Builder.load_file('my.kv')
         return kv
+
+    def on_start(self):
+        # Initialize the app here if needed
+        pass
 
 
 if __name__ == '__main__':

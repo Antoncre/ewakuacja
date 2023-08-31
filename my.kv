@@ -7,7 +7,8 @@ WindowManager:
     size_hint: (0.8, 1)
     pos_hint: {'center_x': 0.5}
     halign: 'center'
-    padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+    padding: [0, self.height / 2.0 - (self.line_height / 2.0) * len(self._lines)]
+    # padding accepts [horizontal, vertical], that's why there is 0 at the beginning
 
 <Button>
     font_size: 28
@@ -78,7 +79,6 @@ WindowManager:
 
     print_btn:print_btn
     save_btn:save_btn
-
 
     # obramowanie wszystkich ramek
     MDBoxLayout:
@@ -451,13 +451,17 @@ WindowManager:
 
 <TableWindow>
     name: "table_window"
+    mainbox:mainbox
+
     canvas:
         Color:
             rgba: 0, 0, 0, 1
         Rectangle:
             size: self.size
             pos: self.pos
+
     MDBoxLayout:
+        id:mainbox
         Button:
             padding: 20
             text: "powrót"
@@ -468,10 +472,7 @@ WindowManager:
             on_press:
                 app.root.current = "main_window"
                 root.manager.transition.direction = 'right'
+                root.show_table()
             background_normal: ''
             background_disabled_normal: ''
             background_color:(0.207, 0.635, 0.423, 0.9)
-
-        Label:
-            text: "Here we are"
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}

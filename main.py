@@ -527,6 +527,7 @@ class MainWindow(Screen):
         pdf.cell(0.2, 12, f"", border=True)
         pdf.cell(11.5, 10, f"")
         pdf.cell(80.5, 12, f"", align="C", border=True, ln=True)
+        pdf.page()
 
         pdf.output('the_pdf.pdf')
         file_path = 'the_pdf.pdf'

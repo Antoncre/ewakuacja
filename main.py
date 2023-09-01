@@ -166,57 +166,140 @@ class MainWindow(Screen):
         [pdf.cell(5, 7, f"{pesel[n]}", border=True) for n in range(11)]
         pdf.cell(0, 7, "", ln=True)
         pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(93.5, 8, f"Adres stałego zamieszkania:")
+        pdf.cell(93.5, 5, f"Adres stałego zamieszkania:")
         pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(11.5, 8, f"|")
+        pdf.cell(11.5, 5, f"|")
         pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(93.5, 8, f"Adres stałego zamieszkania:", ln=True)
+        pdf.cell(93.5, 5, f"Adres stałego zamieszkania:", ln=True)
         pdf.set_font('Sans_pro', '', 14)
 
-        def adres(adres):
-            if len(adres) >= 38:
-                w_btw_spaces = adres.split(' ')
-                # first second third fourth fifth sixth
-                number_of_word_to_include_last = 0
-                for wn in range(len(w_btw_spaces)):
-                    if len(adres[wn]) <= 38:
-                        number_of_word_to_include_last = wn
+        def adres(adres, number=0):
 
-                before_space = " ".join(w_btw_spaces[:number_of_word_to_include_last])
-                after_space = " ".join(w_btw_spaces[number_of_word_to_include_last:])
-                pdf.cell(93.5, 7, f"{before_space.title()}")
-                pdf.cell(11.5, 7, f"|")
-                pdf.cell(93.5, 7, f"{before_space.title()}", ln=True)
-                pdf.cell(93.5, 7, f"{after_space.title()}")
-                pdf.cell(11.5, 7, f"|")
-                pdf.cell(93.5, 7, f"{after_space.title()}", ln=True)
+            if number:
+                if len(adres) >= 38:
+                    w_btw_spaces = adres.split(' ')
+                    # first second third fourth fifth sixth
+                    number_of_word_to_include_last = 0
+                    for wn in range(len(w_btw_spaces)):
+                        if len(" ".join(w_btw_spaces[:wn])) <= 40:
+                            number_of_word_to_include_last = wn
+
+                    before_space = " ".join(w_btw_spaces[:number_of_word_to_include_last])
+                    after_space = " ".join(w_btw_spaces[number_of_word_to_include_last:])
+                    if number == 1:
+                        pdf.cell(93.5, 7, f"{before_space.title()}")
+                    elif number == 2:
+                        pdf.cell(93.5, 7, f"{after_space.title()}")
+                else:
+                    if number == 1:
+                        pdf.cell(93.5, 7, f"{adres.title()}")
+                    elif number == 2:
+                        pdf.cell(93.5, 7, f"")
             else:
-                pdf.cell(93.5, 7, f"{address.title()}", )
-                pdf.set_font('Sans_pro', '', 14)
-                pdf.cell(11.5, 7, f"|")
-                pdf.set_font('Sans_pro', '', 14)
-                pdf.cell(93.5, 7, f"{adres.title()}", ln=True)
+                if len(adres) >= 38:
+                    w_btw_spaces = adres.split(' ')
+                    # first second third fourth fifth sixth
+                    number_of_word_to_include_last = 0
+                    for wn in range(len(w_btw_spaces)):
+                        if len(" ".join(w_btw_spaces[:wn])) <= 40:
+                            number_of_word_to_include_last = wn
+
+                    before_space = " ".join(w_btw_spaces[:number_of_word_to_include_last])
+                    after_space = " ".join(w_btw_spaces[number_of_word_to_include_last:])
+                    pdf.cell(93.5, 7, f"{before_space.title()}")
+                    pdf.cell(11.5, 14, f"|")
+                    pdf.cell(93.5, 7, f"{before_space.title()}", ln=True)
+                    pdf.cell(93.5, 7, f"{after_space.title()}")
+                    pdf.cell(11.5, 14, f"|")
+                    pdf.cell(93.5, 7, f"{after_space.title()}", ln=True)
+                else:
+                    pdf.cell(93.5, 7, f"{address.title()}")
+                    pdf.cell(11.5, 14, f"|")
+                    pdf.cell(93.5, 7, f"{adres.title()}", ln=True)
+                    pdf.cell(93.5, 7, f"")
+                    pdf.cell(11.5, 14, f"|")
+                    pdf.cell(93.5, 7, f"", ln=True)
 
         adres(address)
         pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(39.5, 7, f"Telefon Kontaktowy: ")
+        pdf.cell(39.5, 5, f"Telefon Kontaktowy: ")
         pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(54, 7, f"{number}")
+        pdf.cell(54, 5, f"{number}")
         pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(11.5, 7, f"|")
+        pdf.cell(11.5, 5, f"|")
         pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(39.5, 7, f"Telefon Kontaktowy: ")
+        pdf.cell(39.5, 5, f"Telefon Kontaktowy: ")
         pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(54, 7, f"{number}", ln=True)
+        pdf.cell(54, 5, f"{number}", ln=True)
         pdf.set_font('Sans_pro', '', 10)
         pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C")
         pdf.cell(25, 5, f"")
         pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C", ln=True)
         pdf.cell(80.5, 20, "", border=True)
-        pdf.cell(14.5, 7, f"")
+        pdf.cell(14.5, 20, f"")
         pdf.cell(0.1, 20, f"", border=True)
-        pdf.cell(11.5, 7, f"")
-        pdf.cell(80.5, 20, f"", ln=True, border=True)
+        pdf.cell(11.5, 20, f"")
+        pdf.cell(80.5, 20, f"", border=True, ln=True)
+        pdf.cell(25, 5, "")
+        pdf.set_font('Sans_pro', '', 16)
+        pdf.cell(30, 8, f"Pouczenie", align="C")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(38.5, 12, f"")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(1, 12, f"|")
+        pdf.cell(80.5, 5, f"-------------------------"*3, ln=True)
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(90, 5, f"1. Kartę należy utrzymywać w ciągłej aktualnośći")
+        pdf.cell(3.5, 5, f"")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(11.5, 5, f"|")
+        pdf.set_font('Sans_pro', '', 18)
+        pdf.cell(93.5, 5, f"Karta Ewakuacji Nr {nr.zfill(5)}    C", ln=True)
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(93.5, 5, f"Zmian i wpisów mogą dokonywać tylko")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(11.5, 5, f"|")
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(20, 5, f"Nazwisko: ")
+        pdf.set_font('Sans_pro', '', 16)
+        pdf.cell(73.5, 5, f"{surname.title()}", ln=True)
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(93.5, 5, f"uprawnione organy.")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(11.5, 5, f"|")
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(28.5, 5, f"Imię, imię ojca: ")
+        pdf.set_font('Sans_pro', '', 16)
+        pdf.cell(65, 5, f"{firstname.title()}, {fathers_name.title()}", ln=True)
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(93.5, 5, f"2. Karta jest ważna tylko z dokumentem")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(11.5, 5, f"|")
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(20, 5, f"PESEL:")
+        pdf.set_font('Sans_pro', '', 16)
+        [pdf.cell(5, 5, f"{pesel[n]}", border=True) for n in range(11)]
+        pdf.cell(20, 5, f"", ln=True)
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(93.5, 5, f"tożsamości.")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(11.5, 5, f"|")
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(93.5, 5, f"Adres stałego zamieszkania:", ln=True)
+        pdf.cell(93.5, 5, f"3. Karta stanowi podstawę otrzymania")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(11.5, 5, f"|")
+        adres(address, 1)
+        pdf.cell(18.5, 5, f"", ln=True)
+        pdf.set_font('Sans_pro', '', 12)
+        pdf.cell(93.5, 5, f"przysługujących świadczeń.")
+        pdf.set_font('Sans_pro', '', 14)
+        pdf.cell(11.5, 5, f"|")
+        adres(address, 2)
+        pdf.cell(18.5, 5, f"", ln=True)
+        pdf.set_font('Sans_pro', '', 30)
+        pdf.cell(93.5, 20, f"A", align="C")
+        pdf.cell(18.5, 5, f"")
         pdf.output('the_pdf.pdf')
         file_path = 'the_pdf.pdf'
         if os.path.exists(file_path):
@@ -254,7 +337,7 @@ class MainWindow(Screen):
         self.firstname.text = "Josh"
         self.fathers_name.text = "Jakub"
         self.pesel.text = "11111111116"
-        self.address.text = "Hetmana Stefana Czarnieckiego 24B/90C, Stargard"
+        self.address.text = "Hetmana Stefana Czarnieckiego 24B/90C, 73-110, Stargard, woj. Zachodniopomorskie"
         self.number.text = "111222333"
         self.surname_1.text = "Dziadowska"
         self.name_1.text = "Jadwiga"

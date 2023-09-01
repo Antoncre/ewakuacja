@@ -114,13 +114,10 @@ class MainWindow(Screen):
 
     def opens_printing(self):
 
-        def adres(adres, number=0):
-            wn = 0
-            w_btw_spaces = 0
-            adres = ''
-            if number:
-                if len(adres) >= 38:
-                    w_btw_spaces = adres.split(' ')
+        def adres(my_add, num=0):
+            if num:
+                if len(my_add) >= 38:
+                    w_btw_spaces = my_add.split(' ')
                     # first second third fourth fifth sixth
                     number_of_word_to_include_last = 0
                     for wn in range(len(w_btw_spaces)):
@@ -129,18 +126,18 @@ class MainWindow(Screen):
 
                     before_space = " ".join(w_btw_spaces[:number_of_word_to_include_last])
                     after_space = " ".join(w_btw_spaces[number_of_word_to_include_last:])
-                    if number == 1:
+                    if num == 1:
                         pdf.cell(95, 5, f"{before_space.title()}")
-                    elif number == 2:
+                    elif num == 2:
                         pdf.cell(95, 5, f"{after_space.title()}")
                 else:
-                    if number == 1:
-                        pdf.cell(95, 5, f"{adres.title()}")
-                    elif number == 2:
+                    if num == 1:
+                        pdf.cell(95, 5, f"{my_add.title()}")
+                    elif num == 2:
                         pdf.cell(95, 5, f"")
             else:
-                if len(adres) >= 38:
-                    w_btw_spaces = adres.split(' ')
+                if len(my_add) >= 38:
+                    w_btw_spaces = my_add.split(' ')
                     # first second third fourth fifth sixth
                     number_of_word_to_include_last = 0
                     for wn in range(len(w_btw_spaces)):
@@ -150,6 +147,8 @@ class MainWindow(Screen):
 
                     before_space = " ".join(w_btw_spaces[:number_of_word_to_include_last])
                     after_space = " ".join(w_btw_spaces[number_of_word_to_include_last:])
+                    print("before space", before_space)
+                    print("after space", after_space)
                     pdf.cell(95, 5, f"{before_space.title()}")
                     pdf.set_font('Sans_pro', '', 25)
                     pdf.cell(0.2, 14, f"", border=True)
@@ -162,12 +161,12 @@ class MainWindow(Screen):
                     pdf.set_font('Sans_pro', '', 14)
                     pdf.cell(95, 5, f"{after_space.title()}", ln=True)
                 else:
-                    pdf.cell(95, 5, f"{address.title()}")
+                    pdf.cell(95, 5, f"{my_add.title()}")
                     pdf.set_font('Sans_pro', '', 25)
                     pdf.cell(0.2, 14, f"", border=True)
                     pdf.cell(10, 14, f"")
                     pdf.set_font('Sans_pro', '', 14)
-                    pdf.cell(95, 5, f"{adres.title()}", ln=True)
+                    pdf.cell(95, 5, f"{my_add.title()}", ln=True)
                     pdf.cell(95, 5, f"")
                     pdf.set_font('Sans_pro', '', 25)
                     pdf.cell(0.2, 14, f"", border=True)
@@ -199,12 +198,12 @@ class MainWindow(Screen):
         # Title
         pdf.add_font('Sans_pro', '', 'Sans_pro.otf', uni=True)
         pdf.set_font('Sans_pro', '', 18)
-        pdf.cell(95, 10, f"Karta Ewakuacji Nr {lp.zfill(5)}")
+        pdf.cell(95, 5, f"Karta Ewakuacji Nr {lp.zfill(5)}")
         pdf.set_font('Sans_pro', '', 25)
         pdf.cell(0.2, 14, f"", border=True)
         pdf.cell(10, 14, f"")
         pdf.set_font('Sans_pro', '', 18)
-        pdf.cell(95, 10, f"Karta Ewakuacji Nr {lp.zfill(5)}   B", ln=True)
+        pdf.cell(95, 5, f"Karta Ewakuacji Nr {lp.zfill(5)}   B", ln=True)
         # surname
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(20, 5, f"Nazwisko: ")
@@ -518,16 +517,16 @@ class MainWindow(Screen):
         pdf.set_font('Sans_pro', '', 16)
         pdf.cell(54, 5, f"{number_1}", ln=True)
         pdf.set_font('Sans_pro', '', 30)
-        pdf.cell(95, 20, f"A", align="C")
+        pdf.cell(95, 10, f"A", align="C")
         pdf.set_font('Sans_pro', '', 14)
         # pdf.cell(0.2, 14, f"", border=True)
         pdf.set_font('Sans_pro', '', 10)
         pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C", ln=True)
         pdf.cell(95, 5, f"")
         pdf.set_font('Sans_pro', '', 10)
-        pdf.cell(0.2, 18.7, f"", border=True)
-        pdf.cell(11.5, 20, f"")
-        pdf.cell(80.5, 12,f"", align="C", border=True, ln=True)
+        pdf.cell(0.2, 12, f"", border=True)
+        pdf.cell(11.5, 10, f"")
+        pdf.cell(80.5, 12, f"", align="C", border=True, ln=True)
 
         pdf.output('the_pdf.pdf')
         file_path = 'the_pdf.pdf'

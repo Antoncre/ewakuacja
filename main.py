@@ -527,7 +527,98 @@ class MainWindow(Screen):
         pdf.cell(0.2, 12, f"", border=True)
         pdf.cell(11.5, 10, f"")
         pdf.cell(80.5, 12, f"", align="C", border=True, ln=True)
-        pdf.page()
+        # Second page
+        # Living place
+        pdf.add_page()
+        pdf.set_font('Sans_pro', '', 12)
+
+        def a(text, al="", br="LR", sz=12, h=7):
+            return (pdf.set_font('Sans_pro', '', sz),
+                    pdf.cell(0.2, h+8, f"", border=True),
+                    pdf.cell(11.5, h, f""),
+                    pdf.cell(93, h, text, align=al, border=br, ln=True)
+                    )
+
+        def b(text, sz=12, al="", br="", h=7):
+            return (pdf.set_font('Sans_pro', '', sz),
+                    pdf.cell(90, h, text, border=br, align=al),
+                    pdf.cell(5, h, "")
+                    )
+        def c(text, sz=12, al="", br="", h=7):
+            return (pdf.set_font('Sans_pro', '', sz),
+                    pdf.cell(95, h, text, align=al, border=br)
+                    )
+
+        def signed(p):
+            s = "podpisany"
+            if not int(p[9]) % 2:
+                s = "podpisana"
+            return s
+
+        c(f"Adres miejsca zakwaterowania..........................")
+        a(f"Adres miejsca zakwaterowania..........................", br='')
+        c(f"..............."*5)
+        a(f"..............."*5, br='')
+        b('B', sz=20, al="C", br='LTR', h=20)
+        a(f"A", al="C", br='LTR', h=20, sz=20)
+        b('', sz=20, al="C", br='LBR', h=20)
+        a(f"", al="C", br='LR', sz=20, h=20)
+        c(f"___________"*4, sz=12)
+
+        a("")
+        c("Adres miejsca zakwaterowania..........................")
+        a(f"Ja niżej {signed(pesel)} {surname} {firstname}")
+        c(f"..............."*5)
+        a(f"w dniu ____20__ r. odmawiam poddania się")
+        c(f"..............."*5)
+        a(f"procesowi ewakuacji")
+        b("Adnotacje", h=10, br="LTR")
+        a(f"Podpis:_____________", al="R", br="LR")
+        b("C", h=10, br="LR", sz=20, al="C")
+        a(f"")
+        b(f"Ja niżej {signed(pesel)} {surname} {firstname}", br="LR")
+        a(f"Nie dotyczy w przypadku obowiązków nałożonych")
+        b(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
+        a(f"na obywateli zapisami w ustawie o klęsce")
+        b(f"procesowi ewakuacji", br="LR")
+        a(f"żywiołowej, stanie wyjątkowym oraz wojennym")
+        b(f"Podpis:_____________", al="R", br="LBR")
+        a(f"", br="LBR")
+        pdf.cell(95, 10, "-----"*14, align='C')
+        pdf.cell(0.2, 12, "", align='C', border=True)
+        pdf.cell(100, 10, "-----"*14, align='C', ln=True)
+
+        # 2nd part of 2nd page
+
+        c(f"Adres miejsca zakwaterowania..........................")
+        a(f"Adres miejsca zakwaterowania..........................", br='')
+        c(f"..............." * 5)
+        a(f"..............." * 5, br='')
+        b('B', sz=20, al="C", br='LTR', h=20)
+        a(f"A", al="C", br='LTR', h=20, sz=20)
+        b('', sz=20, al="C", br='LBR', h=20)
+        a(f"", al="C", br='LR', sz=20, h=20)
+        c(f"___________" * 4, sz=12)
+
+        a("")
+        c("Adres miejsca zakwaterowania..........................")
+        a(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}")
+        c(f"..............." * 5)
+        a(f"w dniu ____20__ r. odmawiam poddania się")
+        c(f"..............." * 5)
+        a(f"procesowi ewakuacji")
+        b("Adnotacje", h=10, br="LTR")
+        a(f"Podpis:_____________", al="R", br="LR")
+        b("C", h=10, br="LR", sz=20, al="C")
+        a(f"")
+        b(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}", br="LR")
+        a(f"Nie dotyczy w przypadku obowiązków nałożonych")
+        b(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
+        a(f"na obywateli zapisami w ustawie o klęsce")
+        b(f"procesowi ewakuacji", br="LR")
+        a(f"żywiołowej, stanie wyjątkowym oraz wojennym")
+        b(f"Podpis:_____________", al="R", br="LBR")
+        a(f"", br="LBR")
 
         pdf.output('the_pdf.pdf')
         file_path = 'the_pdf.pdf'
@@ -571,7 +662,7 @@ class MainWindow(Screen):
         self.surname_1.text = "Dziadowska"
         self.name_1.text = "Jadwiga"
         self.fathers_name_1.text = "Władysław"
-        self.pesel_1.text = "11122211113"
+        self.pesel_1.text = "11122211120"
         self.address_1.text = "Kazimierza Wielkiego 83C/14, Stargard"
         self.number_1.text = "333222111"
         # do usubięcia

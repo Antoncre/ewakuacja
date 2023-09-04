@@ -734,16 +734,16 @@ class MainWindow(Screen):
 
         # do usubięcia
         self.surname.text = "Kowalski"
-        self.firstname.text = "Josh"
+        self.firstname.text = "Jan"
         self.fathers_name.text = "Jakub"
         self.pesel.text = "22292911118"
-        self.address.text = "Hetmana Stefana Czarnieckiego 24B/90C, 73-110, Stargard, woj. Zachodniopomorskie"
+        self.address.text = "Hetmana Stefana Czarnieckiego 240B/90F, 73-110, Stargard"
         self.number.text = "111222333"
-        self.surname_1.text = "Dziadowska"
+        self.surname_1.text = "Wzorowa"
         self.name_1.text = "Jadwiga"
         self.fathers_name_1.text = "Władysław"
-        self.pesel_1.text = "11242211125"
-        self.address_1.text = "Kazimierza Wielkiego 83C/14, Stargard"
+        self.pesel_1.text = "31242211123"
+        self.address_1.text = "Kazimierza Wielkiego 183C/40A, 73-110, Stargard"
         self.number_1.text = "333222111"
         # do usubięcia
 

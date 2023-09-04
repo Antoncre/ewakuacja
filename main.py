@@ -2,6 +2,9 @@ import platform
 import os
 import subprocess
 import sqlite3
+import win32ui
+import datetime
+import pandas as pd
 from kivy.uix.screenmanager import ScreenManager
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -15,7 +18,22 @@ from kivy.metrics import dp
 from fpdf import FPDF
 
 
+
 # pip install pyinstaller
+conn = sqlite3.connect('my.db')
+c = conn.cursor()
+c.execute("""CREATE TABLE if not Exists osoby
+        (
+            lp integer,
+            surname text, 
+            name text,
+            father text,
+            pesel text, 
+            address text, 
+            phone text
+        )""")
+conn.commit()
+conn.close()
 
 
 def pesel_checker(pesel):
@@ -77,6 +95,66 @@ def pesel_checker(pesel):
         return False
 
 
+def base_el(l=False):
+    conn = sqlite3.connect('my.db')
+    c = conn.cursor()
+    select_query = f"SELECT * FROM osoby"
+    c.execute(select_query)
+    records = c.fetchall()
+    conn.close()
+    if l:
+        return len(records)
+    else:
+        return records
+
+
+def gender(p):
+    s = "podpisany"
+    if not int(p[9]) % 2:
+        s = "podpisana"
+    return s
+
+
+def chck_age(p):
+    today = str(datetime.date.today()).replace('-', '')
+    birth_date = f""
+    y = p[0:2]
+    m = p[2:4]
+    d = p[4:6]
+    print(y,m,d)
+    match m[0]:
+        case '0':
+            birth_date = f'19{y}{m}{d}'
+        case '1':
+            birth_date = f'19{y}{m}{d}'
+        case '2':
+            birth_date = f'20{y}{str(int(m)-20).zfill(2)}{d}'
+        case '3':
+            birth_date = f'20{y}{str(int(m)-20).zfill(2)}{d}'
+        case '4':
+            birth_date = f'21{y}{str(int(m)-40).zfill(2)}{d}'
+        case '5':
+            birth_date = f'21{y}{str(int(m)-40).zfill(2)}{d}'
+        case '6':
+            birth_date = f'22{y}{str(int(m)-60).zfill(2)}{d}'
+        case '7':
+            birth_date = f'22{y}{str(int(m)-60).zfill(2)}{d}'
+        case '8':
+            birth_date = f'18{y}{str(int(m)-80).zfill(2)}{d}'
+        case '9':
+            birth_date = f'18{y}{str(int(m)-80).zfill(2)}{d}'
+
+    diff = int(today) - int(birth_date)
+    print(birth_date)
+    print(today)
+    if diff < 0:
+        return "Przed narodzeniem"
+    if diff < 10000:
+        return "Niemowlę"
+    else:
+        return int(str(diff)[:-4])
+
+
 class PDF(FPDF):
     def center(self):
         self.cell(93.5, 30, 'Yeah',  align='C')
@@ -87,24 +165,25 @@ class WindowManager(ScreenManager):
 
 
 class MainWindow(Screen):
-    conn = sqlite3.connect('my.db')
-    c = conn.cursor()
-    c.execute("""CREATE TABLE if not Exists osoby
-            (
-                lp integer,
-                surname text, 
-                name text,
-                father text,
-                pesel text, 
-                address text, 
-                phone text
-            )""")
-    conn.commit()
-    conn.close()
 
     def excel_export(self):
-        pass
-        # choose the location where to save the exported file
+        dlg = win32ui.CreateFileDialog(0, 'xlsx', 'Ewakuacja - Stgargard - obszar 1', 0, '.xlsx||')
+        print(base_el())
+        lp = [l[0] for l in base_el()]
+        s = [gender(l[4]) for l in base_el()]
+        nm = [l[2] for l in base_el()]
+        srnm = [l[1] for l in base_el()]
+        p = [l[4] for l in base_el()]
+        age = [chck_age(l[4]) for l in base_el()]
+        address = [l[5] for l in base_el()]
+        phone = [l[6] for l in base_el()]
+        print(age)
+        dlg.DoModal()
+        df1 = pd.DataFrame({'Nr karty ewakuacji': lp, 'Płeć': s, 'Imię': nm, 'Nazwisko': srnm, 'PESEL': p,
+                            'Wiek': age, 'Adres': address,
+                            'Rejon - miejsce': [], 'Telefon': phone, 'Obrażenia':[], 'Uwagi':[]})
+
+        df1.to_excel(dlg.GetPathName(), index=False, header=True)
 
     def csv_export(self):
         pass
@@ -534,8 +613,8 @@ class MainWindow(Screen):
 
         def a(text, al="", br="LR", sz=12, h=7):
             return (pdf.set_font('Sans_pro', '', sz),
-                    pdf.cell(0.2, h+8, f"", border=True),
-                    pdf.cell(11.5, h, f""),
+                    pdf.cell(0.2, h+3, f"", border=True),
+                    pdf.cell(5.5, h, f""),
                     pdf.cell(93, h, text, align=al, border=br, ln=True)
                     )
 
@@ -544,6 +623,7 @@ class MainWindow(Screen):
                     pdf.cell(90, h, text, border=br, align=al),
                     pdf.cell(5, h, "")
                     )
+
         def c(text, sz=12, al="", br="", h=7):
             return (pdf.set_font('Sans_pro', '', sz),
                     pdf.cell(95, h, text, align=al, border=br)
@@ -573,7 +653,7 @@ class MainWindow(Screen):
         c(f"..............."*5)
         a(f"procesowi ewakuacji")
         b("Adnotacje", h=10, br="LTR")
-        a(f"Podpis:_____________", al="R", br="LR")
+        a(f"Podpis:____________", al="R", br="LR")
         b("C", h=10, br="LR", sz=20, al="C")
         a(f"")
         b(f"Ja niżej {signed(pesel)} {surname} {firstname}", br="LR")
@@ -582,11 +662,11 @@ class MainWindow(Screen):
         a(f"na obywateli zapisami w ustawie o klęsce")
         b(f"procesowi ewakuacji", br="LR")
         a(f"żywiołowej, stanie wyjątkowym oraz wojennym")
-        b(f"Podpis:_____________", al="R", br="LBR")
-        a(f"", br="LBR")
-        pdf.cell(95, 10, "-----"*14, align='C')
-        pdf.cell(0.2, 12, "", align='C', border=True)
-        pdf.cell(100, 10, "-----"*14, align='C', ln=True)
+        b(f"Podpis:____________", al="R", br="LBR", h=10)
+        a(f"", br="LBR", h=10)
+        pdf.cell(95, 13, "-----"*14, align='C')
+        pdf.cell(0.2, 13, "", align='C', border=True)
+        pdf.cell(100, 13, "-----"*14, align='C', ln=True)
 
         # 2nd part of 2nd page
 
@@ -656,13 +736,13 @@ class MainWindow(Screen):
         self.surname.text = "Kowalski"
         self.firstname.text = "Josh"
         self.fathers_name.text = "Jakub"
-        self.pesel.text = "11111111116"
+        self.pesel.text = "22292911118"
         self.address.text = "Hetmana Stefana Czarnieckiego 24B/90C, 73-110, Stargard, woj. Zachodniopomorskie"
         self.number.text = "111222333"
         self.surname_1.text = "Dziadowska"
         self.name_1.text = "Jadwiga"
         self.fathers_name_1.text = "Władysław"
-        self.pesel_1.text = "11122211120"
+        self.pesel_1.text = "11242211125"
         self.address_1.text = "Kazimierza Wielkiego 83C/14, Stargard"
         self.number_1.text = "333222111"
         # do usubięcia
@@ -886,6 +966,12 @@ class MainWindow(Screen):
             self.print_btn.disabled = True
             self.save_btn.disabled = True
 
+    def il_os_f(self):
+        if "1" in self.il_os.text:
+            self.il_os.text = "-> 2 os"
+        else:
+            self.il_os.text = "-> 1 os"
+
     def _on_keyboard_down(self, keycode):
         if self.surname.focus and keycode == 40:  # 40 - Enter key pressed
             self.firstname.focus = True
@@ -893,14 +979,15 @@ class MainWindow(Screen):
     def save_and_clear(self):
         conn = sqlite3.connect('my.db')
         c = conn.cursor()
-        insert_query = f"INSERT INTO osoby VALUES ('{self.surname.text.title()}','{self.firstname.text.title()}'," \
+        insert_query = f"INSERT INTO osoby VALUES ('{base_el(True)+1}', '{self.surname.text.title()}', '{self.firstname.text.title()}'," \
                        f"'{self.fathers_name.text.title()}', '{self.pesel.text}', '{self.address.text.title()}', " \
                        f"'{self.number.text}')"
-        insert_query_2 = f"INSERT INTO osoby VALUES ('{self.surname_1.text.title()}','{self.name_1.text.title()}'," \
+        insert_query_2 = f"INSERT INTO osoby VALUES ('{base_el(True)+2}', '{self.surname_1.text.title()}','{self.name_1.text.title()}'," \
                          f"'{self.fathers_name_1.text.title()}', '{self.pesel_1.text}', '{self.address_1.text.title()}', " \
                          f"'{self.number_1.text}')"
         c.execute(insert_query)
-        c.execute(insert_query_2)
+        if self.surname_1.text:
+            c.execute(insert_query_2)
         conn.commit()
         conn.close()
         self.print_btn.disabled = self.save_btn.disabled = True
@@ -950,37 +1037,45 @@ class TableWindow(Screen):
         select_query = f"SELECT * FROM osoby"
         c.execute(select_query)
         records = c.fetchall()
-        for record in records:
-            print(record)
+        rws = [record for record in records]
         conn.commit()
         conn.close()
         table = MDDataTable(
             pos_hint={'center_x': 0.5, 'center_y': 0.5},
-            size_hint=(1, 1),
+            check=True,
             background_color_selected_cell="e4514f",
+            background_color="000000",
             column_data=[
-                ("Nr Karty", dp(25)),
-                ("Nazwisko", dp(40)),
-                ("Imię", dp(40)),
-                ("Imię ojca", dp(40)),
-                ("PESEL", dp(44)),
-                ("Adres zamieszkania", dp(70)),
+                ("Nr Karty", dp(40)),
+                ("Nazwisko", dp(55)),
+                ("Imię", dp(55)),
+                ("Imię ojca", dp(55)),
+                ("PESEL", dp(55)),
+                ("Adres zamieszkania", dp(120)),
                 ("Nr telefonu", dp(40)),
             ],
-            row_data=[
-                ("1", "Hue", "Jaune", "Josh", "00000000000", "555555555", "hmm")
-            ]
+            row_data=rws
         )
         self.mainbox.add_widget(table)
 
+    class Table(MDApp):
+        def build(self):
+            Window.clearcolor = (0, 0, 0, 1)
+            Window.maximize()
+            self.theme_cls.theme_style = 'Dark'
+            kv = Builder.load_file('my.kv')
+            table_window = TableWindow()
+            table_window.show_table()
+            return kv
 
 class EwakuacjaApp(MDApp):
     def build(self):
         Window.clearcolor = (0, 0, 0, 1)
         Window.maximize()
         self.theme_cls.theme_style = 'Dark'
-        table_window = TableWindow()
         kv = Builder.load_file('my.kv')
+        table_window = TableWindow()
+        table_window.show_table()
         return kv
 
     def on_start(self):

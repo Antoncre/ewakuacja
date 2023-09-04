@@ -79,6 +79,7 @@ WindowManager:
 
     print_btn:print_btn
     save_btn:save_btn
+    il_os:il_os
 
     # obramowanie wszystkich ramek
     MDBoxLayout:
@@ -105,14 +106,17 @@ WindowManager:
                     Button:
                         text: "Export Excel"
                         id:excel_btn
+                        on_press:root.excel_export()
                 AnchorLayout:
                     Button:
                         text: "Export CSV"
                         id:csv_btn
+                        on_press:root.csv_export()
                 AnchorLayout:
                     Button:
                         text: "Export DB"
                         id:db_btn
+                        on_press:root.db_export()
                 AnchorLayout:
                     Button:
                         text: "Osoby"
@@ -436,17 +440,65 @@ WindowManager:
                     id:save_btn
 
 
-        Button:
-            disabled: True
-            text: "Drukuj"
-            font_size: 30
-            padding: 20
-            size_hint: (0.2, 0.13)
-            on_press: root.opens_printing()
-            background_normal: ''
-            background_disabled_normal: ''
-            background_color:(0.207, 0.635, 0.423, 0.9)
-            id: print_btn
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: 20
+            size_hint: (0.2, 0.2)
+            pos_hint: {"x": 0.37, "y": 0.5}
+
+            Button:
+                text: "-> 1 os"
+                font_size: 30
+                padding: 20
+                size_hint: (1, 0.3)
+                pos_hint: {"x": 0.2, "y": 0.25}
+                on_press: root.il_os_f()
+                background_normal: ''
+                background_disabled_normal: ''
+                background_color:(0.207, 0.635, 0.423, 0.9)
+                id: il_os
+
+            Button:
+                disabled: True
+                text: "Drukuj"
+                font_size: 30
+                padding: 20
+                size_hint: (2, 0.8)
+                on_press: root.opens_printing()
+                background_normal: ''
+                background_disabled_normal: ''
+                background_color:(0.207, 0.635, 0.423, 0.9)
+                id: print_btn
+
+
+<MDTextInput>
+    font_size: 28
+    size_hint: (1, 1)
+    pos_hint: {'center_x': 0.5}
+    halign: 'center'
+
+
+<MDLabel>
+    font_size: 25
+    pos_hint: {'center_x': 0.5}
+    size_hint: (0.8, 1)
+    canvas.before:
+        Color:
+            rgba: (0,0,0,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+
+<MDRaisedButton>
+    font_name: "DejaVuSans.ttf"
+    size_hint: (0.8, 1)
+    canvas.before:
+        Color:
+            rgba: (0,0,0,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
 
 
 <TableWindow>
@@ -460,10 +512,10 @@ WindowManager:
             size: self.size
             pos: self.pos
 
-    MDBoxLayout:
+    BoxLayout:
         id:mainbox
+        scroll: True
         Button:
-            padding: 20
             text: "powrót"
             font_size: 30
             size_hint: (0.2, 0.13)

@@ -79,6 +79,8 @@ WindowManager:
 
     print_btn:print_btn
     save_btn:save_btn
+    first_form:first_form
+    second_form:second_form
     il_os:il_os
 
     # obramowanie wszystkich ramek
@@ -114,9 +116,9 @@ WindowManager:
                         on_press:root.csv_export()
                 AnchorLayout:
                     Button:
-                        text: "Export DB"
+                        text: "Export JSON"
                         id:db_btn
-                        on_press:root.db_export()
+                        on_press:root.json_export()
                 AnchorLayout:
                     Button:
                         text: "Osoby"
@@ -131,11 +133,7 @@ WindowManager:
                 spacing: 10
                 orientation: "vertical"
                 text_size: 40
-                row_force_default:True
-                row_default_height:40
-                col_force_default:True
-                col_default_width:400
-                text_size: 40
+                id:first_form
 
                 Label:
                     text: ""
@@ -152,12 +150,17 @@ WindowManager:
                 TextInput:
                     multiline:False
                     write_tab: False
+                    canvas.before:
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
                         Line:
                             width: 2
                             rectangle: self.x, self.y, self.width, self.height
+                    color: 0,0,0,1
                     foreground_color: (0, 0, 0, 1)
                     on_text: root.typer()
                     id:surname
@@ -267,6 +270,7 @@ WindowManager:
                 col_force_default:True
                 col_default_width:400
                 text_size: 40
+                id:second_form
 
                 Label:
                     text: ""

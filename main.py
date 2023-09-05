@@ -109,9 +109,9 @@ def base_el(l=False):
 
 
 def gender(p):
-    s = "podpisany"
+    s = "Mężczyzna"
     if not int(p[9]) % 2:
-        s = "podpisana"
+        s = "Kobieta"
     return s
 
 
@@ -155,6 +155,32 @@ def chck_age(p):
         return int(str(diff)[:-4])
 
 
+def export_xlsx(return_frame=False):
+    dlg = win32ui.CreateFileDialog(0, 'xlsx', 'Ewakuacja - Stgargard - obszar 1', 0, '.xlsx||')
+    print(base_el())
+    lp = [l[0] for l in base_el()]
+    s = [gender(l[4]) for l in base_el()]
+    nm = [l[2] for l in base_el()]
+    srnm = [l[1] for l in base_el()]
+    p = [l[4] for l in base_el()]
+    age = [chck_age(l[4]) for l in base_el()]
+    address = [l[5] for l in base_el()]
+    phone = [l[6] for l in base_el()]
+    df1 = pd.DataFrame({'Nr karty ewakuacji': lp, 'Płeć': s, 'Imię': nm, 'Nazwisko': srnm, 'PESEL': p,
+                        'Wiek': age, 'Adres': address,
+                        'Rejon - miejsce skąd': ['' for _ in range(len(lp))],
+                        'Rejon - miejsce dokąd': ['' for _ in range(len(lp))], 'Telefon': phone,
+                        'Obrażenia': ['' for _ in range(len(lp))], 'Uwagi': ['' for f in range(len(lp))]})
+
+    if return_frame:
+        return df1
+    dlg.DoModal()
+    if '.xlsx' in dlg.GetPathName():
+        print(dlg.GetPathName())
+        df1.to_excel(dlg.GetPathName(), index=False, header=True)
+
+
+
 class PDF(FPDF):
     def center(self):
         self.cell(93.5, 30, 'Yeah',  align='C')
@@ -165,31 +191,32 @@ class WindowManager(ScreenManager):
 
 
 class MainWindow(Screen):
+    @staticmethod
+    def excel_export():
+        export_xlsx()
+        # TODO: dodać zmianę obszaru w ustawieniach i zmieniać jako element w bazie danych a tu ajko zmienną
 
-    def excel_export(self):
-        dlg = win32ui.CreateFileDialog(0, 'xlsx', 'Ewakuacja - Stgargard - obszar 1', 0, '.xlsx||')
-        print(base_el())
-        lp = [l[0] for l in base_el()]
-        s = [gender(l[4]) for l in base_el()]
-        nm = [l[2] for l in base_el()]
-        srnm = [l[1] for l in base_el()]
-        p = [l[4] for l in base_el()]
-        age = [chck_age(l[4]) for l in base_el()]
-        address = [l[5] for l in base_el()]
-        phone = [l[6] for l in base_el()]
-        print(age)
+    @staticmethod
+    def csv_export():
+        df = export_xlsx(True)
+        dlg = win32ui.CreateFileDialog(0, 'csv', 'Ewakuacja - Stgargard - obszar 1', 0, '.csv||')
         dlg.DoModal()
-        df1 = pd.DataFrame({'Nr karty ewakuacji': lp, 'Płeć': s, 'Imię': nm, 'Nazwisko': srnm, 'PESEL': p,
-                            'Wiek': age, 'Adres': address,
-                            'Rejon - miejsce': [], 'Telefon': phone, 'Obrażenia':[], 'Uwagi':[]})
+        if '.csv' in dlg.GetPathName():
+            df.to_csv(dlg.GetPathName(), index=False, header=True, encoding='utf-8')
 
-        df1.to_excel(dlg.GetPathName(), index=False, header=True)
+            # df = pd.read_csv(dlg.GetPathName(), encoding='utf-8')
+            # print('CSV read', df)
 
-    def csv_export(self):
-        pass
+    @staticmethod
+    def json_export():
+        df = export_xlsx(True)
+        dlg = win32ui.CreateFileDialog(0, 'json', 'Ewakuacja - Stgargard - obszar 1', 0, '.json||')
+        dlg.DoModal()
+        if '.json' in dlg.GetPathName():
+            df.to_json(dlg.GetPathName(), index=False)
 
-    def db_export(self):
-        pass
+            # df = pd.read_json(dlg.GetPathName())
+            # print('Json read', df)
 
     def opens_printing(self):
 
@@ -733,29 +760,19 @@ class MainWindow(Screen):
         self.number_1.fine = False
 
         # do usubięcia
-        self.surname.text = "Kowalski"
-        self.firstname.text = "Jan"
-        self.fathers_name.text = "Jakub"
-        self.pesel.text = "22292911118"
-        self.address.text = "Hetmana Stefana Czarnieckiego 240B/90F, 73-110, Stargard"
-        self.number.text = "111222333"
-        self.surname_1.text = "Wzorowa"
-        self.name_1.text = "Jadwiga"
-        self.fathers_name_1.text = "Władysław"
-        self.pesel_1.text = "31242211123"
-        self.address_1.text = "Kazimierza Wielkiego 183C/40A, 73-110, Stargard"
-        self.number_1.text = "333222111"
+        # self.surname.text = "Kowalski"
+        # self.firstname.text = "Jan"
+        # self.fathers_name.text = "Jakub"
+        # self.pesel.text = "22292911118"
+        # self.address.text = "Hetmana Stefana Czarnieckiego 240B/90F, 73-110, Stargard"
+        # self.number.text = "111222333"
+        # self.surname_1.text = "Wzorowa"
+        # self.name_1.text = "Jadwiga"
+        # self.fathers_name_1.text = "Władysław"
+        # self.pesel_1.text = "31242211123"
+        # self.address_1.text = "Kazimierza Wielkiego 183C/40A, 73-110, Stargard"
+        # self.number_1.text = "333222111"
         # do usubięcia
-
-        self.surname.text.title()
-        # self.firstname.text = self.firstname.text.title()
-        # self.fathers_name.text = self.fathers_name.text.title()
-        # self.address.text = self.address.text.title()
-        # self.surname_1.text = self.surname_1.text.title()
-        # self.name_1.text = self.name_1.text.title()
-        # self.fathers_name_1.text = self.fathers_name_1.text.title()
-        # self.address_1.text = self.address_1.text.title()
-
 
         # print(locals())
         with self.surname.canvas.after:
@@ -969,8 +986,14 @@ class MainWindow(Screen):
     def il_os_f(self):
         if "1" in self.il_os.text:
             self.il_os.text = "-> 2 os"
+            self.second_form.pos_hint = {'x': 0, 'y': -2}
+            self.second_form.size_hint = (0.05, 0)
+            self.surname_1.text = self.name_1.text = self.fathers_name_1.text = self.number.text = \
+                self.pesel_1.text = self.address_1.text = self.number_1.text = ""
         else:
             self.il_os.text = "-> 1 os"
+            self.second_form.pos_hint = {'x': 0, 'y': 0}
+            self.second_form.size_hint = (1, 1)
 
     def _on_keyboard_down(self, keycode):
         if self.surname.focus and keycode == 40:  # 40 - Enter key pressed
@@ -986,7 +1009,7 @@ class MainWindow(Screen):
                          f"'{self.fathers_name_1.text.title()}', '{self.pesel_1.text}', '{self.address_1.text.title()}', " \
                          f"'{self.number_1.text}')"
         c.execute(insert_query)
-        if self.surname_1.text:
+        if "1" in self.il_os.text:
             c.execute(insert_query_2)
         conn.commit()
         conn.close()

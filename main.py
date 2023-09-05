@@ -218,7 +218,7 @@ class MainWindow(Screen):
             # df = pd.read_json(dlg.GetPathName())
             # print('Json read', df)
 
-    def opens_printing(self):
+    def opens_printing(self, both=True):
 
         def adres(my_add, num=0):
             if num:
@@ -280,6 +280,8 @@ class MainWindow(Screen):
                     pdf.set_font('Sans_pro', '', 14)
                     pdf.cell(95, 5, f"", ln=True)
 
+        if not self.surname_1.text or not self.name_1.text or '2' in self.il_os.text:
+            both = False
         firstname = self.firstname.text
         surname = self.surname.text
         fathers_name = self.fathers_name.text
@@ -294,8 +296,8 @@ class MainWindow(Screen):
         address_1 = self.address_1.text
         number_1 = self.number_1.text
 
-        lp = '1'
-        lp_1 = '2'
+        lp = str(base_el(True) + 1)
+        lp_1 = str(base_el(True) + 2)
         pdf = FPDF('P', 'mm', 'A4')
         pdf.add_page()
 
@@ -468,171 +470,173 @@ class MainWindow(Screen):
         pdf.cell(11.5, 20, f"")
         pdf.cell(80.5, 12,f"", align="C", border=True, ln=True)
         pdf.cell(80.5, 5, f"_________" * 12,ln=True)
-        # Doubling the part I but another info
-        # Title
-        pdf.set_font('Sans_pro', '', 18)
-        pdf.cell(95, 10, f"Karta Ewakuacji Nr {lp_1.zfill(5)}")
-        pdf.set_font('Sans_pro', '', 25)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 18)
-        pdf.cell(95, 10, f"Karta Ewakuacji Nr {lp_1.zfill(5)}   B", ln=True)
-        # surname
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(20, 5, f"Nazwisko: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(75, 5, f"{surname_1.title()}")
-        pdf.set_font('Sans_pro', '', 25)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(20, 5, f"Nazwisko: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(75, 5, f"{surname_1.title()}", ln=True)
-        # Names
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(30, 5, f"Imię, imię ojca: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}")
-        pdf.set_font('Sans_pro', '', 25)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(30, 5, f"Imię, imię ojca: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}", ln=True)
-        # Pesel
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(20, 5, f"PESEL:")
-        pdf.set_font('Sans_pro', '', 16)
-        [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
-        pdf.cell(20, 5, f"")
-        pdf.set_font('Sans_pro', '', 25)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(20, 5, f"PESEL:")
-        pdf.set_font('Sans_pro', '', 16)
-        [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
-        pdf.cell(0, 5, "", ln=True)
-        # Address
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(95, 5, f"Adres stałego zamieszkania:")
-        pdf.set_font('Sans_pro', '', 25)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(95, 5, f"Adres stałego zamieszkania:", ln=True)
-        pdf.set_font('Sans_pro', '', 14)
-        adres(address_1)
-        # Phone
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(39.5, 5, f"Telefon Kontaktowy: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(55.5, 5, f"{number_1}")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 10, f"", border=True)
-        pdf.cell(11.5, 10, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(39.5, 5, f"Telefon Kontaktowy: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(54, 5, f"{number_1}", ln=True)
-        # Issued by
-        pdf.set_font('Sans_pro', '', 10)
-        pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C")
-        pdf.cell(25, 5, f"")
-        pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C", ln=True)
-        pdf.cell(80.5, 12,"", border=True)
-        pdf.cell(14.5, 20, f"")
-        pdf.cell(0.2, 25, f"", border=True)
-        pdf.cell(11.5, 20, f"")
-        pdf.cell(80.5, 12,f"", border=True, ln=True)
-        pdf.cell(100, 2, "", ln=True)
-        pdf.cell(25, 5, "")
-        # Info
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(30, 5, f"Pouczenie", align="C")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(40, 12, f"")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 12, f"", border=True)
-        pdf.cell(80.5, 5, f"-------------------------" * 3, ln=True)
-        pdf.cell(80.5, 3, "", ln=True)
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(90, 5, f"1. Kartę należy utrzymywać w ciągłej aktualnośći")
-        pdf.cell(5, 5, f"")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 10, f"", border=True)
-        pdf.cell(10, 5, f"", )
-        # C part and info
-        pdf.set_font('Sans_pro', '', 18)
-        pdf.cell(95, 8, f"Karta Ewakuacji Nr {lp_1.zfill(5)}    C", ln=True)
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(95, 5, f"Zmian i wpisów mogą dokonywać tylko")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 10, f"", border=True)
-        pdf.cell(10, 5, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(20, 6, f"Nazwisko: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(73.5, 6, f"{surname_1.title()}", ln=True)
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(95, 5, f"uprawnione organy.")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(28.5, 5, f"Imię, imię ojca: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}", ln=True)
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(95, 5, f"2. Karta jest ważna tylko z dokumentem")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(20, 5, f"PESEL:")
-        pdf.set_font('Sans_pro', '', 16)
-        [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
-        pdf.cell(20, 5, f"", ln=True)
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(95, 5, f"tożsamości.")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(95, 5, f"Adres stałego zamieszkania:", ln=True)
-        pdf.cell(95, 5, f"3. Karta stanowi podstawę otrzymania")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        adres(address_1, 1)
-        pdf.cell(18.5, 5, f"", ln=True)
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(95, 5, f"przysługujących świadczeń.")
-        pdf.set_font('Sans_pro', '', 14)
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        adres(address_1, 2)
-        pdf.cell(18.5, 5, f"", ln=True)
-        pdf.cell(95, 5, f"")
-        pdf.cell(0.2, 14, f"", border=True)
-        pdf.cell(10, 14, f"")
-        pdf.set_font('Sans_pro', '', 12)
-        pdf.cell(39.5, 5, f"Telefon Kontaktowy: ")
-        pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(54, 5, f"{number_1}", ln=True)
-        pdf.set_font('Sans_pro', '', 30)
-        pdf.cell(95, 10, f"A", align="C")
-        pdf.set_font('Sans_pro', '', 14)
-        # pdf.cell(0.2, 14, f"", border=True)
-        pdf.set_font('Sans_pro', '', 10)
-        pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C", ln=True)
-        pdf.cell(95, 5, f"")
-        pdf.set_font('Sans_pro', '', 10)
-        pdf.cell(0.2, 12, f"", border=True)
-        pdf.cell(11.5, 10, f"")
-        pdf.cell(80.5, 12, f"", align="C", border=True, ln=True)
+
+        if both:
+            # Doubling the part I but another info
+            # Title
+            pdf.set_font('Sans_pro', '', 18)
+            pdf.cell(95, 10, f"Karta Ewakuacji Nr {lp_1.zfill(5)}")
+            pdf.set_font('Sans_pro', '', 25)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 18)
+            pdf.cell(95, 10, f"Karta Ewakuacji Nr {lp_1.zfill(5)}   B", ln=True)
+            # surname
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(20, 5, f"Nazwisko: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(75, 5, f"{surname_1.title()}")
+            pdf.set_font('Sans_pro', '', 25)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(20, 5, f"Nazwisko: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(75, 5, f"{surname_1.title()}", ln=True)
+            # Names
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(30, 5, f"Imię, imię ojca: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}")
+            pdf.set_font('Sans_pro', '', 25)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(30, 5, f"Imię, imię ojca: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}", ln=True)
+            # Pesel
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(20, 5, f"PESEL:")
+            pdf.set_font('Sans_pro', '', 16)
+            [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            pdf.cell(20, 5, f"")
+            pdf.set_font('Sans_pro', '', 25)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(20, 5, f"PESEL:")
+            pdf.set_font('Sans_pro', '', 16)
+            [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            pdf.cell(0, 5, "", ln=True)
+            # Address
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(95, 5, f"Adres stałego zamieszkania:")
+            pdf.set_font('Sans_pro', '', 25)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(95, 5, f"Adres stałego zamieszkania:", ln=True)
+            pdf.set_font('Sans_pro', '', 14)
+            adres(address_1)
+            # Phone
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(39.5, 5, f"Telefon Kontaktowy: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(55.5, 5, f"{number_1}")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 10, f"", border=True)
+            pdf.cell(11.5, 10, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(39.5, 5, f"Telefon Kontaktowy: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(54, 5, f"{number_1}", ln=True)
+            # Issued by
+            pdf.set_font('Sans_pro', '', 10)
+            pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C")
+            pdf.cell(25, 5, f"")
+            pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C", ln=True)
+            pdf.cell(80.5, 12,"", border=True)
+            pdf.cell(14.5, 20, f"")
+            pdf.cell(0.2, 25, f"", border=True)
+            pdf.cell(11.5, 20, f"")
+            pdf.cell(80.5, 12,f"", border=True, ln=True)
+            pdf.cell(100, 2, "", ln=True)
+            pdf.cell(25, 5, "")
+            # Info
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(30, 5, f"Pouczenie", align="C")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(40, 12, f"")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 12, f"", border=True)
+            pdf.cell(80.5, 5, f"-------------------------" * 3, ln=True)
+            pdf.cell(80.5, 3, "", ln=True)
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(90, 5, f"1. Kartę należy utrzymywać w ciągłej aktualnośći")
+            pdf.cell(5, 5, f"")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 10, f"", border=True)
+            pdf.cell(10, 5, f"", )
+            # C part and info
+            pdf.set_font('Sans_pro', '', 18)
+            pdf.cell(95, 8, f"Karta Ewakuacji Nr {lp_1.zfill(5)}    C", ln=True)
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(95, 5, f"Zmian i wpisów mogą dokonywać tylko")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 10, f"", border=True)
+            pdf.cell(10, 5, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(20, 6, f"Nazwisko: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(73.5, 6, f"{surname_1.title()}", ln=True)
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(95, 5, f"uprawnione organy.")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(28.5, 5, f"Imię, imię ojca: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}", ln=True)
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(95, 5, f"2. Karta jest ważna tylko z dokumentem")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(20, 5, f"PESEL:")
+            pdf.set_font('Sans_pro', '', 16)
+            [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            pdf.cell(20, 5, f"", ln=True)
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(95, 5, f"tożsamości.")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(95, 5, f"Adres stałego zamieszkania:", ln=True)
+            pdf.cell(95, 5, f"3. Karta stanowi podstawę otrzymania")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            adres(address_1, 1)
+            pdf.cell(18.5, 5, f"", ln=True)
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(95, 5, f"przysługujących świadczeń.")
+            pdf.set_font('Sans_pro', '', 14)
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            adres(address_1, 2)
+            pdf.cell(18.5, 5, f"", ln=True)
+            pdf.cell(95, 5, f"")
+            pdf.cell(0.2, 14, f"", border=True)
+            pdf.cell(10, 14, f"")
+            pdf.set_font('Sans_pro', '', 12)
+            pdf.cell(39.5, 5, f"Telefon Kontaktowy: ")
+            pdf.set_font('Sans_pro', '', 16)
+            pdf.cell(54, 5, f"{number_1}", ln=True)
+            pdf.set_font('Sans_pro', '', 30)
+            pdf.cell(95, 10, f"A", align="C")
+            pdf.set_font('Sans_pro', '', 14)
+            # pdf.cell(0.2, 14, f"", border=True)
+            pdf.set_font('Sans_pro', '', 10)
+            pdf.cell(80, 5, f"Organ wydający kartę: podpis, data:", align="C", ln=True)
+            pdf.cell(95, 5, f"")
+            pdf.set_font('Sans_pro', '', 10)
+            pdf.cell(0.2, 12, f"", border=True)
+            pdf.cell(11.5, 10, f"")
+            pdf.cell(80.5, 12, f"", align="C", border=True, ln=True)
         # Second page
         # Living place
         pdf.add_page()
@@ -695,37 +699,37 @@ class MainWindow(Screen):
         pdf.cell(0.2, 13, "", align='C', border=True)
         pdf.cell(100, 13, "-----"*14, align='C', ln=True)
 
-        # 2nd part of 2nd page
+        if both:
+            # 2nd part of 2nd page
+            c(f"Adres miejsca zakwaterowania..........................")
+            a(f"Adres miejsca zakwaterowania..........................", br='')
+            c(f"..............." * 5)
+            a(f"..............." * 5, br='')
+            b('B', sz=20, al="C", br='LTR', h=20)
+            a(f"A", al="C", br='LTR', h=20, sz=20)
+            b('', sz=20, al="C", br='LBR', h=20)
+            a(f"", al="C", br='LR', sz=20, h=20)
+            c(f"___________" * 4, sz=12)
 
-        c(f"Adres miejsca zakwaterowania..........................")
-        a(f"Adres miejsca zakwaterowania..........................", br='')
-        c(f"..............." * 5)
-        a(f"..............." * 5, br='')
-        b('B', sz=20, al="C", br='LTR', h=20)
-        a(f"A", al="C", br='LTR', h=20, sz=20)
-        b('', sz=20, al="C", br='LBR', h=20)
-        a(f"", al="C", br='LR', sz=20, h=20)
-        c(f"___________" * 4, sz=12)
-
-        a("")
-        c("Adres miejsca zakwaterowania..........................")
-        a(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}")
-        c(f"..............." * 5)
-        a(f"w dniu ____20__ r. odmawiam poddania się")
-        c(f"..............." * 5)
-        a(f"procesowi ewakuacji")
-        b("Adnotacje", h=10, br="LTR")
-        a(f"Podpis:_____________", al="R", br="LR")
-        b("C", h=10, br="LR", sz=20, al="C")
-        a(f"")
-        b(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}", br="LR")
-        a(f"Nie dotyczy w przypadku obowiązków nałożonych")
-        b(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
-        a(f"na obywateli zapisami w ustawie o klęsce")
-        b(f"procesowi ewakuacji", br="LR")
-        a(f"żywiołowej, stanie wyjątkowym oraz wojennym")
-        b(f"Podpis:_____________", al="R", br="LBR")
-        a(f"", br="LBR")
+            a("")
+            c("Adres miejsca zakwaterowania..........................")
+            a(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}")
+            c(f"..............." * 5)
+            a(f"w dniu ____20__ r. odmawiam poddania się")
+            c(f"..............." * 5)
+            a(f"procesowi ewakuacji")
+            b("Adnotacje", h=10, br="LTR")
+            a(f"Podpis:_____________", al="R", br="LR")
+            b("C", h=10, br="LR", sz=20, al="C")
+            a(f"")
+            b(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}", br="LR")
+            a(f"Nie dotyczy w przypadku obowiązków nałożonych")
+            b(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
+            a(f"na obywateli zapisami w ustawie o klęsce")
+            b(f"procesowi ewakuacji", br="LR")
+            a(f"żywiołowej, stanie wyjątkowym oraz wojennym")
+            b(f"Podpis:_____________", al="R", br="LBR")
+            a(f"", br="LBR")
 
         pdf.output('the_pdf.pdf')
         file_path = 'the_pdf.pdf'
@@ -976,9 +980,10 @@ class MainWindow(Screen):
         if self.surname.fine and self.firstname.fine and self.fathers_name.fine and \
                 self.pesel.fine and self.address.fine and self.number.fine and \
                 self.surname_1.fine and self.name_1.fine and self.fathers_name_1.fine and \
-                self.pesel_1.fine and self.address_1.fine and self.number_1.fine:
+                self.pesel_1.fine and self.address_1.fine and self.number_1.fine\
+                or self.surname.fine and self.firstname.fine and self.fathers_name.fine and \
+                self.pesel.fine and self.address.fine and self.number.fine and "2" in self.il_os.text:
             self.print_btn.disabled = False
-            self.save_btn.disabled = False
         else:
             self.print_btn.disabled = True
             self.save_btn.disabled = True
@@ -988,12 +993,15 @@ class MainWindow(Screen):
             self.il_os.text = "-> 2 os"
             self.second_form.pos_hint = {'x': 0, 'y': -2}
             self.second_form.size_hint = (0.05, 0)
-            self.surname_1.text = self.name_1.text = self.fathers_name_1.text = self.number.text = \
+            self.surname_1.text = self.name_1.text = self.fathers_name_1.text = \
                 self.pesel_1.text = self.address_1.text = self.number_1.text = ""
         else:
             self.il_os.text = "-> 1 os"
             self.second_form.pos_hint = {'x': 0, 'y': 0}
             self.second_form.size_hint = (1, 1)
+
+    def enable_printing(self):
+        self.save_btn.disabled = False
 
     def _on_keyboard_down(self, keycode):
         if self.surname.focus and keycode == 40:  # 40 - Enter key pressed
@@ -1090,6 +1098,7 @@ class TableWindow(Screen):
             table_window = TableWindow()
             table_window.show_table()
             return kv
+
 
 class EwakuacjaApp(MDApp):
     def build(self):

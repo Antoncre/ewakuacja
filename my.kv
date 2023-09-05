@@ -150,10 +150,6 @@ WindowManager:
                 TextInput:
                     multiline:False
                     write_tab: False
-                    canvas.before:
-                        Line:
-                            width: 2
-                            rectangle: self.x, self.y, self.width, self.height
                     canvas.after:
                         Color:
                             rgba: 1, 182/255, 20/255, 1
@@ -456,7 +452,10 @@ WindowManager:
                 padding: 20
                 size_hint: (1, 0.3)
                 pos_hint: {"x": 0.2, "y": 0.25}
-                on_press: root.il_os_f()
+                on_press:
+                    root.il_os_f()
+                on_release:
+                    root.typer()
                 background_normal: ''
                 background_disabled_normal: ''
                 background_color:(0.207, 0.635, 0.423, 0.9)
@@ -468,7 +467,9 @@ WindowManager:
                 font_size: 30
                 padding: 20
                 size_hint: (2, 0.8)
-                on_press: root.opens_printing()
+                on_press:
+                    root.opens_printing()
+                    root.enable_printing()
                 background_normal: ''
                 background_disabled_normal: ''
                 background_color:(0.207, 0.635, 0.423, 0.9)

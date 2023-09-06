@@ -218,7 +218,7 @@ class MainWindow(Screen):
             # df = pd.read_json(dlg.GetPathName())
             # print('Json read', df)
 
-    def opens_printing(self, both=True):
+    def opens_printing(self, both=True, empty=False):
 
         def adres(my_add, num=0):
             if num:
@@ -280,8 +280,9 @@ class MainWindow(Screen):
                     pdf.set_font('Sans_pro', '', 14)
                     pdf.cell(95, 5, f"", ln=True)
 
-        if not self.surname_1.text or not self.name_1.text or '2' in self.il_os.text:
+        if '2' in self.il_os.text:
             both = False
+
         firstname = self.firstname.text
         surname = self.surname.text
         fathers_name = self.fathers_name.text
@@ -298,13 +299,31 @@ class MainWindow(Screen):
 
         lp = str(base_el(True) + 1)
         lp_1 = str(base_el(True) + 2)
+
+        if empty:
+            surname = pesel = number = surname_1 = pesel_1 = number_1 = "__________"
+            firstname = fathers_name = address = name_1 = fathers_name_1 = address_1 = ''
+            lp = "_____"
+            lp_1 = "_____"
+
+        def a_1(text, al="", br="", sz=12, h=7):
+            return (pdf.set_font('Sans_pro', '', 12),
+                    pdf.cell(95, h, text, align=al, br=br)
+                    )
+
+        def b_c(text, sz=12, al="", br="", h=7):
+            return (pdf.set_font('Sans_pro', '', sz),
+                    pdf.cell(90, h, text, border=br, align=al),
+                    pdf.cell(5, h, "")
+                    )
+
         pdf = FPDF('P', 'mm', 'A4')
         pdf.add_page()
+        pdf.add_font('Sans_pro', '', 'Sans_pro.otf', uni=True)
 
         # page 1
 
         # Title
-        pdf.add_font('Sans_pro', '', 'Sans_pro.otf', uni=True)
         pdf.set_font('Sans_pro', '', 18)
         pdf.cell(95, 5, f"Karta Ewakuacji Nr {lp.zfill(5)}")
         pdf.set_font('Sans_pro', '', 25)
@@ -328,19 +347,28 @@ class MainWindow(Screen):
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(30, 5, f"Imię, imię ojca: ")
         pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(65, 5, f"{firstname.title()}, {fathers_name.title()}")
+        if empty:
+            pdf.cell(65, 5, f"")
+        else:
+            pdf.cell(65, 5, f"{firstname.title()}, {fathers_name.title()}")
         pdf.set_font('Sans_pro', '', 25)
         pdf.cell(0.2, 14, f"", border=True)
         pdf.cell(10, 14, f"")
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(30, 5, f"Imię, imię ojca: ")
         pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(65, 5, f"{firstname.title()}, {fathers_name.title()}", ln=True)
+        if empty:
+            pdf.cell(65, 5, f"", ln=True)
+        else:
+            pdf.cell(65, 5, f"{firstname.title()}, {fathers_name.title()}", ln=True)
         # Pesel
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(20, 5, f"PESEL:")
         pdf.set_font('Sans_pro', '', 16)
-        [pdf.cell(5, 5, f"{pesel[n]}", border=True) for n in range(11)]
+        if not empty:
+            [pdf.cell(5, 5, f"{pesel[n]}", border=True) for n in range(11)]
+        else:
+            [pdf.cell(5, 5, "", border=True) for _ in range(11)]
         pdf.cell(20, 5, f"")
         pdf.set_font('Sans_pro', '', 25)
         pdf.cell(0.2, 14, f"", border=True)
@@ -348,7 +376,10 @@ class MainWindow(Screen):
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(20, 5, f"PESEL:")
         pdf.set_font('Sans_pro', '', 16)
-        [pdf.cell(5, 5, f"{pesel[n]}", border=True) for n in range(11)]
+        if not empty:
+            [pdf.cell(5, 5, f"{pesel[n]}", border=True) for n in range(11)]
+        else:
+            [pdf.cell(5, 5, "", border=True) for _ in range(11)]
         pdf.cell(0, 5, "", ln=True)
         # Address
         pdf.set_font('Sans_pro', '', 12)
@@ -419,7 +450,10 @@ class MainWindow(Screen):
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(28.5, 5, f"Imię, imię ojca: ")
         pdf.set_font('Sans_pro', '', 16)
-        pdf.cell(65, 5, f"{firstname.title()}, {fathers_name.title()}", ln=True)
+        if empty:
+            pdf.cell(65, 5, f"", ln=True)
+        else:
+            pdf.cell(65, 5, f"{firstname.title()}, {fathers_name.title()}", ln=True)
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(95, 5, f"2. Karta jest ważna tylko z dokumentem")
         pdf.set_font('Sans_pro', '', 14)
@@ -428,7 +462,10 @@ class MainWindow(Screen):
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(20, 5, f"PESEL:")
         pdf.set_font('Sans_pro', '', 16)
-        [pdf.cell(5, 5, f"{pesel[n]}", border=True) for n in range(11)]
+        if empty:
+            [pdf.cell(5, 5, "", border=True) for _ in range(11)]
+        else:
+            [pdf.cell(5, 5, f"{pesel[n]}", border=True) for n in range(11)]
         pdf.cell(20, 5, f"", ln=True)
         pdf.set_font('Sans_pro', '', 12)
         pdf.cell(95, 5, f"tożsamości.")
@@ -497,19 +534,28 @@ class MainWindow(Screen):
             pdf.set_font('Sans_pro', '', 12)
             pdf.cell(30, 5, f"Imię, imię ojca: ")
             pdf.set_font('Sans_pro', '', 16)
-            pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}")
+            if empty:
+                pdf.cell(65, 5, f"")
+            else:
+                pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}")
             pdf.set_font('Sans_pro', '', 25)
             pdf.cell(0.2, 14, f"", border=True)
             pdf.cell(10, 14, f"")
             pdf.set_font('Sans_pro', '', 12)
             pdf.cell(30, 5, f"Imię, imię ojca: ")
             pdf.set_font('Sans_pro', '', 16)
-            pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}", ln=True)
+            if empty:
+                pdf.cell(65, 5, f"", ln=True)
+            else:
+                pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}", ln=True)
             # Pesel
             pdf.set_font('Sans_pro', '', 12)
             pdf.cell(20, 5, f"PESEL:")
             pdf.set_font('Sans_pro', '', 16)
-            [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            if not empty:
+                [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            else:
+                [pdf.cell(5, 5, "", border=True) for _ in range(11)]
             pdf.cell(20, 5, f"")
             pdf.set_font('Sans_pro', '', 25)
             pdf.cell(0.2, 14, f"", border=True)
@@ -517,7 +563,10 @@ class MainWindow(Screen):
             pdf.set_font('Sans_pro', '', 12)
             pdf.cell(20, 5, f"PESEL:")
             pdf.set_font('Sans_pro', '', 16)
-            [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            if not empty:
+                [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            else:
+                [pdf.cell(5, 5, "", border=True) for _ in range(11)]
             pdf.cell(0, 5, "", ln=True)
             # Address
             pdf.set_font('Sans_pro', '', 12)
@@ -588,7 +637,10 @@ class MainWindow(Screen):
             pdf.set_font('Sans_pro', '', 12)
             pdf.cell(28.5, 5, f"Imię, imię ojca: ")
             pdf.set_font('Sans_pro', '', 16)
-            pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}", ln=True)
+            if empty:
+                pdf.cell(65, 5, f"", ln=True)
+            else:
+                pdf.cell(65, 5, f"{name_1.title()}, {fathers_name_1.title()}", ln=True)
             pdf.set_font('Sans_pro', '', 12)
             pdf.cell(95, 5, f"2. Karta jest ważna tylko z dokumentem")
             pdf.set_font('Sans_pro', '', 14)
@@ -597,7 +649,10 @@ class MainWindow(Screen):
             pdf.set_font('Sans_pro', '', 12)
             pdf.cell(20, 5, f"PESEL:")
             pdf.set_font('Sans_pro', '', 16)
-            [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            if not empty:
+                [pdf.cell(5, 5, f"{pesel_1[n]}", border=True) for n in range(11)]
+            else:
+                [pdf.cell(5, 5, "", border=True) for _ in range(11)]
             pdf.cell(20, 5, f"", ln=True)
             pdf.set_font('Sans_pro', '', 12)
             pdf.cell(95, 5, f"tożsamości.")
@@ -642,94 +697,97 @@ class MainWindow(Screen):
         pdf.add_page()
         pdf.set_font('Sans_pro', '', 12)
 
-        def a(text, al="", br="LR", sz=12, h=7):
+        def a_2(text, al="", br="LR", sz=12, h=7):
             return (pdf.set_font('Sans_pro', '', sz),
                     pdf.cell(0.2, h+3, f"", border=True),
                     pdf.cell(5.5, h, f""),
                     pdf.cell(93, h, text, align=al, border=br, ln=True)
                     )
 
-        def b(text, sz=12, al="", br="", h=7):
+        def b_2(text, sz=12, al="", br="", h=7):
             return (pdf.set_font('Sans_pro', '', sz),
                     pdf.cell(90, h, text, border=br, align=al),
                     pdf.cell(5, h, "")
                     )
 
-        def c(text, sz=12, al="", br="", h=7):
+        def c_2(text, sz=12, al="", br="", h=7):
             return (pdf.set_font('Sans_pro', '', sz),
                     pdf.cell(95, h, text, align=al, border=br)
                     )
 
         def signed(p):
             s = "podpisany"
-            if not int(p[9]) % 2:
-                s = "podpisana"
+            if empty:
+                s = "podpisany(a)"
+            else:
+                if not int(p[9]) % 2:
+                    s = "podpisana"
             return s
 
-        c(f"Adres miejsca zakwaterowania..........................")
-        a(f"Adres miejsca zakwaterowania..........................", br='')
-        c(f"..............."*5)
-        a(f"..............."*5, br='')
-        b('B', sz=20, al="C", br='LTR', h=20)
-        a(f"A", al="C", br='LTR', h=20, sz=20)
-        b('', sz=20, al="C", br='LBR', h=20)
-        a(f"", al="C", br='LR', sz=20, h=20)
-        c(f"___________"*4, sz=12)
+        c_2(f"Adres miejsca zakwaterowania..........................")
+        a_2(f"Adres miejsca zakwaterowania..........................", br='')
+        c_2(f"..............."*5)
+        a_2(f"..............."*5, br='')
+        b_2('B', sz=20, al="C", br='LTR', h=20)
+        a_2(f"A", al="C", br='LTR', h=20, sz=20)
+        b_2('', sz=20, al="C", br='LBR', h=20)
+        a_2(f"", al="C", br='LR', sz=20, h=20)
+        c_2(f"___________"*4, sz=12)
 
-        a("")
-        c("Adres miejsca zakwaterowania..........................")
-        a(f"Ja niżej {signed(pesel)} {surname} {firstname}")
-        c(f"..............."*5)
-        a(f"w dniu ____20__ r. odmawiam poddania się")
-        c(f"..............."*5)
-        a(f"procesowi ewakuacji")
-        b("Adnotacje", h=10, br="LTR")
-        a(f"Podpis:____________", al="R", br="LR")
-        b("C", h=10, br="LR", sz=20, al="C")
-        a(f"")
-        b(f"Ja niżej {signed(pesel)} {surname} {firstname}", br="LR")
-        a(f"Nie dotyczy w przypadku obowiązków nałożonych")
-        b(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
-        a(f"na obywateli zapisami w ustawie o klęsce")
-        b(f"procesowi ewakuacji", br="LR")
-        a(f"żywiołowej, stanie wyjątkowym oraz wojennym")
-        b(f"Podpis:____________", al="R", br="LBR", h=10)
-        a(f"", br="LBR", h=10)
+        a_2("")
+        c_2("Adres miejsca zakwaterowania..........................")
+        a_2(f"Ja niżej {signed(pesel)} {surname} {firstname}")
+        c_2(f"..............."*5)
+        a_2(f"w dniu ____20__ r. odmawiam poddania się")
+        c_2(f"..............."*5)
+        a_2(f"procesowi ewakuacji")
+        b_2("Adnotacje", h=10, br="LTR")
+        a_2(f"Podpis:____________", al="R", br="LR")
+        b_2("C", h=10, br="LR", sz=20, al="C")
+        a_2(f"")
+        b_2(f"Ja niżej {signed(pesel)} {surname} {firstname}", br="LR")
+        a_2(f"Nie dotyczy w przypadku obowiązków nałożonych")
+        b_2(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
+        a_2(f"na obywateli zapisami w ustawie o klęsce")
+        b_2(f"procesowi ewakuacji", br="LR")
+        a_2(f"żywiołowej, stanie wyjątkowym oraz wojennym")
+        b_2(f"Podpis:____________", al="R", br="LBR", h=10)
+        a_2(f"", br="LBR", h=10)
         pdf.cell(95, 13, "-----"*14, align='C')
         pdf.cell(0.2, 13, "", align='C', border=True)
         pdf.cell(100, 13, "-----"*14, align='C', ln=True)
 
         if both:
             # 2nd part of 2nd page
-            c(f"Adres miejsca zakwaterowania..........................")
-            a(f"Adres miejsca zakwaterowania..........................", br='')
-            c(f"..............." * 5)
-            a(f"..............." * 5, br='')
-            b('B', sz=20, al="C", br='LTR', h=20)
-            a(f"A", al="C", br='LTR', h=20, sz=20)
-            b('', sz=20, al="C", br='LBR', h=20)
-            a(f"", al="C", br='LR', sz=20, h=20)
-            c(f"___________" * 4, sz=12)
+            c_2(f"Adres miejsca zakwaterowania..........................")
+            a_2(f"Adres miejsca zakwaterowania..........................", br='')
+            c_2(f"..............." * 5)
+            a_2(f"..............." * 5, br='')
+            b_2('B', sz=20, al="C", br='LTR', h=20)
+            a_2(f"A", al="C", br='LTR', h=20, sz=20)
+            b_2('', sz=20, al="C", br='LBR', h=20)
+            a_2(f"", al="C", br='LR', sz=20, h=20)
+            c_2(f"___________" * 4, sz=12)
 
-            a("")
-            c("Adres miejsca zakwaterowania..........................")
-            a(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}")
-            c(f"..............." * 5)
-            a(f"w dniu ____20__ r. odmawiam poddania się")
-            c(f"..............." * 5)
-            a(f"procesowi ewakuacji")
-            b("Adnotacje", h=10, br="LTR")
-            a(f"Podpis:_____________", al="R", br="LR")
-            b("C", h=10, br="LR", sz=20, al="C")
-            a(f"")
-            b(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}", br="LR")
-            a(f"Nie dotyczy w przypadku obowiązków nałożonych")
-            b(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
-            a(f"na obywateli zapisami w ustawie o klęsce")
-            b(f"procesowi ewakuacji", br="LR")
-            a(f"żywiołowej, stanie wyjątkowym oraz wojennym")
-            b(f"Podpis:_____________", al="R", br="LBR")
-            a(f"", br="LBR")
+            a_2("")
+            c_2("Adres miejsca zakwaterowania..........................")
+            a_2(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}")
+            c_2(f"..............." * 5)
+            a_2(f"w dniu ____20__ r. odmawiam poddania się")
+            c_2(f"..............." * 5)
+            a_2(f"procesowi ewakuacji")
+            b_2("Adnotacje", h=10, br="LTR")
+            a_2(f"Podpis:_____________", al="R", br="LR")
+            b_2("C", h=10, br="LR", sz=20, al="C")
+            a_2(f"")
+            b_2(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}", br="LR")
+            a_2(f"Nie dotyczy w przypadku obowiązków nałożonych")
+            b_2(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
+            a_2(f"na obywateli zapisami w ustawie o klęsce")
+            b_2(f"procesowi ewakuacji", br="LR")
+            a_2(f"żywiołowej, stanie wyjątkowym oraz wojennym")
+            b_2(f"Podpis:_____________", al="R", br="LBR")
+            a_2(f"", br="LBR")
 
         pdf.output('the_pdf.pdf')
         file_path = 'the_pdf.pdf'

@@ -16,10 +16,10 @@ from kivymd.uix.datatables import MDDataTable
 # from kivymd.uix.button import MDRoundFlatButton
 from kivy.metrics import dp
 from fpdf import FPDF
+import os
 
+os.environ['KIVY_NO_CONSOLELOG'] = '1'
 
-
-# pip install pyinstaller
 conn = sqlite3.connect('my.db')
 c = conn.cursor()
 c.execute("""CREATE TABLE if not Exists osoby
@@ -84,7 +84,6 @@ def pesel_checker(pesel):
             right_control = 10 - mod
 
         control_num = int(pesel[10])
-        print(f'suma wynosi: {total}')
         print(f'wpisana lk: {control_num}')
         print(f'poprawna lk: {right_control}')
         if control_num != right_control:
@@ -121,7 +120,6 @@ def chck_age(p):
     y = p[0:2]
     m = p[2:4]
     d = p[4:6]
-    print(y,m,d)
     match m[0]:
         case '0':
             birth_date = f'19{y}{m}{d}'
@@ -145,8 +143,6 @@ def chck_age(p):
             birth_date = f'18{y}{str(int(m)-80).zfill(2)}{d}'
 
     diff = int(today) - int(birth_date)
-    print(birth_date)
-    print(today)
     if diff < 0:
         return "Przed narodzeniem"
     if diff < 10000:
@@ -157,7 +153,6 @@ def chck_age(p):
 
 def export_xlsx(return_frame=False):
     dlg = win32ui.CreateFileDialog(0, 'xlsx', 'Ewakuacja - Stgargard - obszar 1', 0, '.xlsx||')
-    print(base_el())
     lp = [l[0] for l in base_el()]
     s = [gender(l[4]) for l in base_el()]
     nm = [l[2] for l in base_el()]
@@ -176,7 +171,6 @@ def export_xlsx(return_frame=False):
         return df1
     dlg.DoModal()
     if '.xlsx' in dlg.GetPathName():
-        print(dlg.GetPathName())
         df1.to_excel(dlg.GetPathName(), index=False, header=True)
 
 
@@ -247,14 +241,11 @@ class MainWindow(Screen):
                     # first second third fourth fifth sixth
                     number_of_word_to_include_last = 0
                     for wn in range(len(w_btw_spaces)):
-                        print("lent", len(" ".join(w_btw_spaces[:wn])))
                         if len(" ".join(w_btw_spaces[:wn])) <= 40:
                             number_of_word_to_include_last = wn
 
                     before_space = " ".join(w_btw_spaces[:number_of_word_to_include_last])
                     after_space = " ".join(w_btw_spaces[number_of_word_to_include_last:])
-                    print("before space", before_space)
-                    print("after space", after_space)
                     pdf.cell(95, 5, f"{before_space.title()}")
                     pdf.set_font('Sans_pro', '', 25)
                     pdf.cell(0.2, 14, f"", border=True)
@@ -562,7 +553,7 @@ class MainWindow(Screen):
 
         c_2(f"___________"*4, sz=12)
 
-        a_2(f"Ja niżej {signed(pesel)} {surname} {firstname}")
+        a_2(f"Ja niżej {signed(pesel)} {surname.title()} {firstname.title()}")
         c_2("Adres miejsca zakwaterowania..........................")
         a_2(f"w dniu ____20__ r. odmawiam poddania się")
         c_2(f"..............."*5)
@@ -571,7 +562,7 @@ class MainWindow(Screen):
         a_2(f"Podpis:____________", al="R", br="LR")
         b_2("C", h=10, br="LR", sz=20, al="C")
         a_2(f"")
-        b_2(f"Ja niżej {signed(pesel)} {surname} {firstname}", br="LR")
+        b_2(f"Ja niżej {signed(pesel)} {surname.title()} {firstname.title()}", br="LR")
         a_2(f"Nie dotyczy w przypadku obowiązków nałożonych")
         b_2(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
         a_2(f"na obywateli zapisami w ustawie o klęsce")
@@ -598,7 +589,7 @@ class MainWindow(Screen):
 
             c_2(f"___________" * 4, sz=12)
 
-            a_2(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}")
+            a_2(f"Ja niżej {signed(pesel_1)} {surname_1.title()} {name_1.title()}")
             c_2("Adres miejsca zakwaterowania..........................")
             a_2(f"w dniu ____20__ r. odmawiam poddania się")
             c_2(f"..............." * 5)
@@ -607,7 +598,7 @@ class MainWindow(Screen):
             a_2(f"Podpis:_____________", al="R", br="LR")
             b_2("C", h=10, br="LR", sz=20, al="C")
             a_2(f"")
-            b_2(f"Ja niżej {signed(pesel_1)} {surname_1} {name_1}", br="LR")
+            b_2(f"Ja niżej {signed(pesel_1)} {surname_1.title()} {name_1.title()}", br="LR")
             a_2(f"Nie dotyczy w przypadku obowiązków nałożonych")
             b_2(f"w dniu ____20__ r. odmawiam poddania się", br="LR")
             a_2(f"na obywateli zapisami w ustawie o klęsce")
@@ -881,8 +872,6 @@ class MainWindow(Screen):
             self.il_os.text = "-> 2 os"
             self.second_form.pos_hint = {'x': 0, 'y': -2}
             self.second_form.size_hint = (0.05, 0)
-            self.surname_1.text = self.name_1.text = self.fathers_name_1.text = \
-                self.pesel_1.text = self.address_1.text = self.number_1.text = ""
         else:
             self.il_os.text = "-> 1 os"
             self.second_form.pos_hint = {'x': 0, 'y': 0}
@@ -890,6 +879,7 @@ class MainWindow(Screen):
 
     def enable_printing(self):
         self.save_btn.disabled = False
+        self.il_os.disabled = True
 
     def _on_keyboard_down(self, keycode):
         if self.surname.focus and keycode == 40:  # 40 - Enter key pressed
@@ -910,6 +900,7 @@ class MainWindow(Screen):
         conn.commit()
         conn.close()
         self.print_btn.disabled = self.save_btn.disabled = True
+        self.il_os.disabled = False
         self.surname.text = self.firstname.text = self.fathers_name.text = self.pesel.text = self.address.text = \
             self.number.text = self.surname_1.text = self.name_1.text = self.fathers_name_1.text = self.number.text = \
             self.pesel_1.text = self.address_1.text = self.number_1.text = ''

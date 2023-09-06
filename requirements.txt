@@ -1,3 +1,4 @@
+altgraph==0.17.3
 certifi==2023.7.22
 charset-normalizer==3.2.0
 defusedxml==0.7.1
@@ -15,12 +16,16 @@ kivymd==1.1.1
 numpy==1.25.2
 openpyxl==3.1.2
 pandas==2.1.0
+pefile==2023.2.7
 Pillow==10.0.0
 Pygments==2.16.1
+pyinstaller==5.13.2
+pyinstaller-hooks-contrib==2023.8
 pypiwin32==223
 python-dateutil==2.8.2
 pytz==2023.3
 pywin32==306
+pywin32-ctypes==0.2.2
 requests==2.31.0
 six==1.16.0
 tzdata==2023.3

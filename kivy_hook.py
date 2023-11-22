@@ -1,2 +1,2 @@
-from kivy.tools.packaging.pyinstaller_hooks import install_hooks
-install_hooks(globals())
+from kivy.tools.packaging.pyinstaller_hooks import get_hooks
+get_hooks(globals())

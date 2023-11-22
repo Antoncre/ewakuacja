@@ -1,5 +1,4 @@
 import platform
-import os
 import subprocess
 import sqlite3
 import win32ui
@@ -188,7 +187,7 @@ class MainWindow(Screen):
     @staticmethod
     def excel_export():
         export_xlsx()
-        # TODO: dodać zmianę obszaru w ustawieniach i zmieniać jako element w bazie danych a tu ajko zmienną
+        # TODO: dodać zmianę obszaru w ustawieniach i zmieniać jako element w bazie danych a tu jako zmienną
 
     @staticmethod
     def csv_export():
@@ -297,19 +296,19 @@ class MainWindow(Screen):
             lp = "_____"
             lp_1 = "_____"
 
-        def a_1(text, text1='', al="", al1='', br=False, br1=False, sz=12, sz1=16, h=5, w1=20, w2=70):
+        def a_1(text, text1='', al="", al1='', br=False, br1=False, sz=12.0, sz1=16.0, h=5.0, w1=20.0, w2=70.0):
             if text1:
                 return (pdf.set_font('Sans_pro', '', sz),
                         pdf.cell(w1, h, text, border=br, align=al),
                         pdf.set_font('Sans_pro', '', sz1),
                         pdf.cell(w2, h, text1, border=br1, align=al1),
-                    )
+                        )
             else:
                 return (pdf.set_font('Sans_pro', '', sz),
                         pdf.cell(95, h, text, align=al, border=br),
                     )
 
-        def b_c(text, text1='', al="", al1="", br=False, br1=False, sz=12, sz1=16, h=5, w1=20, w2=70):
+        def b_c(text, text1='', al="", al1="", br=False, br1=False, sz=12, sz1=16, h=5, w1=20.0, w2=70.0):
             if text1:
                 return (pdf.set_font('Sans_pro', '', 12),
                         pdf.cell(0.2, h+5, f"", border=True),
